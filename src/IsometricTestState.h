@@ -3,6 +3,7 @@
 
 #include "GameOptions.h"
 #include "GameState.h"
+#include "Isometric.h"
 #include "raylib.h"
 
 class IsometricTestState : public GameState {
@@ -15,6 +16,11 @@ class IsometricTestState : public GameState {
 
   private:
     const GameOptions &m_gameOptions;
+    Camera2D m_camera;
+
+    void drawNormalGrid() const;
+    void drawIsoGrid() const;
+    void drawRectangle(const Isometric::Rectangle &rectangleData, const Color &c) const;
 };
 
 #endif

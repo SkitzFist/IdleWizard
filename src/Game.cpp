@@ -1,14 +1,29 @@
 #include "Game.h"
+#include "EntityTestState.h"
 #include "IsometricTestState.h"
 
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
-
+    SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
-    m_currentState = std::make_unique<IsometricTestState>(gameOptions);
+
+    switchState(State::ENTITY_TEST);
 }
 
 Game::~Game() {
     CloseWindow();
+}
+
+void Game::switchState(State state) {
+    switch (state) {
+    case State::ENTITY_TEST:
+        m_currentState = std::make_unique<EntityTestState>();
+        break;
+    case State::ISOMETRIC_TEST:
+        m_currentState = std::make_unique<IsometricTestState>(m_gameOptions);
+        break;
+    default:
+        break;
+    }
 }
 
 void Game::run() {

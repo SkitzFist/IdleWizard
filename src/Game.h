@@ -9,6 +9,12 @@
 
 class Game {
   public:
+    enum State {
+        ENTITY_TEST,
+        ISOMETRIC_TEST
+    };
+
+  public:
     Game(const GameOptions &gameOptions);
     ~Game();
 
@@ -18,10 +24,13 @@ class Game {
   private:
     const GameOptions &m_gameOptions;
     std::unique_ptr<GameState> m_currentState;
+
     void gameLoop();
     void handleInput();
     void update();
     void render() const;
+
+    void switchState(State);
 };
 
 #endif
