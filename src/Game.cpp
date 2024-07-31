@@ -1,12 +1,15 @@
 #include "Game.h"
+
+// test states
 #include "EntityTestState.h"
 #include "IsometricTestState.h"
+#include "QuadTreeTestState.h"
 
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
 
-    switchState(State::ENTITY_TEST);
+    switchState(State::QUAD_TREE_TEST);
 }
 
 Game::~Game() {
@@ -20,6 +23,9 @@ void Game::switchState(State state) {
         break;
     case State::ISOMETRIC_TEST:
         m_currentState = std::make_unique<IsometricTestState>(m_gameOptions);
+        break;
+    case State::QUAD_TREE_TEST:
+        m_currentState = std::make_unique<QuadTreeTestState>();
         break;
     default:
         break;

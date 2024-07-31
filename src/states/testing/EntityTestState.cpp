@@ -83,7 +83,6 @@ void testBigStrength(int nrOfEntities, int nrOfTests) {
         totalDuration += duration.count();
     }
 
-    std::cout << "Big Strength totalSize: " << (sizeof(BigStrength) * nrOfEntities) << '\n';
     std::cout << "Big Strength Totalduration: " << totalDuration << '\n';
     std::cout << "Big Strength Average duration: " << totalDuration / 5 << '\n';
 }
@@ -112,7 +111,6 @@ void testBig(int nrOfEntities, int nrOfTests) {
         totalDuration += duration.count();
     }
 
-    std::cout << "Big totalSize: " << (sizeof(Big) * nrOfEntities) << '\n';
     std::cout << "Big Totalduration: " << totalDuration << '\n';
     std::cout << "Big Average duration: " << totalDuration / 5 << '\n';
 }
@@ -151,7 +149,7 @@ void testEntity(int nrOfEntities, int nrOfTests) {
     double totalDuration = 0.0;
     for (int i = 0; i < nrOfTests; ++i) {
         auto start = std::chrono::high_resolution_clock::now();
-        for (int j = 0; j < entitiesAlive.size(); ++j) {
+        for (std::size_t j = 0; j < entitiesAlive.size(); ++j) {
             int posIndex = entitiesAlive[j].posIndex;
             xPositions[posIndex] += 1;
             yPositions[posIndex] += 1;
@@ -164,7 +162,6 @@ void testEntity(int nrOfEntities, int nrOfTests) {
         totalDuration += duration.count();
     }
 
-    // std::cout << "Big totalSize: " << sizeof(bigs) << '\n';
     std::cout << "Entity Totalduration: " << totalDuration << '\n';
     std::cout << "Entity Average duration: " << totalDuration / 5 << '\n';
 }
@@ -177,7 +174,7 @@ void testEntityTrue(int nrOfEntities, int nrOfTests) {
     std::vector<double> strengths;
     strengths.reserve(nrOfEntities);
 
-    for (int i = 0; i < nrOfEntities; ++i) {
+    for (std::size_t i = 0; i < nrOfEntities; ++i) {
         if (i % 3 != 0) {
             xPos.emplace_back(0);
             yPos.emplace_back(0);
@@ -189,12 +186,12 @@ void testEntityTrue(int nrOfEntities, int nrOfTests) {
 
     for (int j = 0; j < nrOfTests; ++j) {
         auto start = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < xPos.size(); ++i) {
+        for (std::size_t i = 0; i < xPos.size(); ++i) {
             xPos[i] += 1.f;
             yPos[i] += 1.f;
         }
 
-        for (int i = 0; i < strengths.size(); ++i) {
+        for (std::size_t i = 0; i < strengths.size(); ++i) {
             double damage = strengths[i] * 10.0;
         }
 

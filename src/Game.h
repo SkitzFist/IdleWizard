@@ -11,7 +11,8 @@ class Game {
   public:
     enum State {
         ENTITY_TEST,
-        ISOMETRIC_TEST
+        ISOMETRIC_TEST,
+        QUAD_TREE_TEST
     };
 
   public:
