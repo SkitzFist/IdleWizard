@@ -27,6 +27,16 @@ FetchContent_MakeAvailable(raylib)
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
 
+# Automatically include all header directories
+file(GLOB_RECURSE HEADER_DIRS "${CMAKE_CURRENT_LIST_DIR}/src/*.h")
+set(PROJECT_INCLUDE_DIRS "")
+foreach(HEADER_FILE ${HEADER_DIRS})
+    get_filename_component(HEADER_PATH ${HEADER_FILE} DIRECTORY)
+    list(APPEND PROJECT_INCLUDE_DIRS ${HEADER_PATH})
+endforeach()
+list(REMOVE_DUPLICATES PROJECT_INCLUDE_DIRS)
+include_directories(${PROJECT_INCLUDE_DIRS})
+
 # Define the executable
 add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
@@ -52,9 +62,21 @@ else()
   if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /O2)
   else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -mavx2 -mfma -Wall -Wextra -O3 -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-variable) # -mavx2 -mfma -Wall -Wextra -O3 -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5
     set_target_properties(${PROJECT_NAME} PROPERTIES
-    LINK_FLAGS "-O3 -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5 -lwinmm -lgdi32 -luser32"
+    LINK_FLAGS "-O3" # -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5 -lwinmm -lgdi32 -luser32
 )
   endif()
 endif()
+
+# Add helper makefile to clean cmake cache (it will 're-include' new project folders in src)
+add_custom_target(clean-cache
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/clean_cache.cmake
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Cleaning CMake cache"
+)
+
+file(WRITE ${CMAKE_BINARY_DIR}/clean_cache.cmake "
+  file(REMOVE CMakeCache.txt)
+  file(REMOVE_RECURSE CMakeFiles)
+")
