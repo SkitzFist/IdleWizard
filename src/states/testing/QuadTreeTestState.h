@@ -5,7 +5,12 @@
 
 #include "CameraInput.hpp"
 #include "GameState.h"
-#include "QuadTreeVisualizer.h"
+#include "TiledDataOrientedQuadTree.h"
+
+// components
+#include "Positions.h"
+#include "Sizes.h"
+#include "Velocities.h"
 
 class QuadTreeTestState : public GameState {
   public:
@@ -19,7 +24,21 @@ class QuadTreeTestState : public GameState {
     Camera2D m_camera;
     CameraInput m_cameraInput;
 
-    QuadTreeVisualizer m_quadTreeVisualizer;
+    // spatial hashing
+    TiledDataOrientedQuadTree m_quadTree;
+
+    // components
+    Positions m_positions;
+    Sizes m_sizes;
+    Velocities m_velocities;
+
+    // texture
+    Texture2D m_circleTexture;
+
+  private:
+    void createEntity();
+
+    void drawUi() const;
 };
 
 #endif
