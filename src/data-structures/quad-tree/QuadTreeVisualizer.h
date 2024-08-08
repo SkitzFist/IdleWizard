@@ -17,6 +17,7 @@ class QuadTreeVisualizer {
     std::vector<Rectangle> m_rects;
     std::vector<int> m_depthLevels;
 
+    void renderTreeWithDepthSplit() const;
     void renderDepth(int depth) const;
 };
 
