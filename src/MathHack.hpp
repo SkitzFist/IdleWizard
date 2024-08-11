@@ -11,6 +11,11 @@ inline constexpr const T &clamp(T &x, const T &min, const T &max) {
     return (x < min) ? (x = min) : (x > max ? (x = max) : x);
 }
 
+template <class T>
+inline constexpr const T min(const T &a, const T &b) {
+    return a > b ? b : a;
+}
+
 inline float Q_rsqrt(float number) {
     long i;
     float x2, y;

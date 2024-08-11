@@ -11,17 +11,6 @@ struct Positions {
         xPositions.emplace_back(x);
         yPositions.emplace_back(y);
     }
-
-    float getX(int entity) const {
-        return xPositions[entity];
-    }
-
-    float getY(int entity) const {
-        return yPositions[entity];
-    }
-
-    void remove(int entity) {
-    }
 };
 
 #endif

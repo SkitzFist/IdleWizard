@@ -9,11 +9,6 @@ struct Sizes {
     void add(int entity, float radius) {
         radiuses.emplace_back(radius);
     }
-
-    float getRadius(int entity) const {
-        // todo debug
-        return radiuses[entity];
-    }
 };
 
 #endif
