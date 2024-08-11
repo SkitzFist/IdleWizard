@@ -25,7 +25,8 @@ class QuadTreeTestState : public GameState {
     CameraInput m_cameraInput;
 
     // spatial hashing
-    TiledDataOrientedQuadTree m_quadTree;
+    TiledDataOrientedGrid m_quadTree;
+    Rectangle m_range;
 
     // components
     Positions m_positions;
@@ -35,8 +36,12 @@ class QuadTreeTestState : public GameState {
     // texture
     Texture2D m_circleTexture;
 
+    // entities
+    std::vector<int> m_entitiesInRange;
+
   private:
     void createEntity();
+    Rectangle getCameraRect() const;
 
     void drawUi() const;
 };

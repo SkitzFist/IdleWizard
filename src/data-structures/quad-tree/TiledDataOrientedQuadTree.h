@@ -9,12 +9,9 @@
 #include "Sizes.h"
 #include "raylib.h"
 
-/*
-  Todo should remove the depth, only one layer allowed at a time.
-*/
-
 struct Quad {
     std::vector<int> entities;
+    // std::vector<int> tiles; TODO
 };
 
 struct Depth {
@@ -27,32 +24,37 @@ struct Depth {
     }
 };
 
-class TiledDataOrientedQuadTree {
+class TiledDataOrientedGrid {
   public:
-    TiledDataOrientedQuadTree(int maxDepth, const float rootSize);
+    TiledDataOrientedGrid(int maxDepth, int startDepth, const float rootSize);
 
     void addEntity(int entity, float x, float y, float width, float height);
     // void addTile() TODO
-    void getEntities(float x, float y, float width, float height, std::vector<int> &out);
+    void getEntities(const float x,
+                     const float y,
+                     const float width,
+                     const float height,
+                     std::vector<int> &out,
+                     const std::vector<float> &xPos,
+                     const std::vector<float> &yPos,
+                     const std::vector<float> &radiuses);
 
     void clearEntities();
 
     // debug
-    void debugAdd(int entity, float x, float y, int depth);
-    void debugRenderSplit(const Positions &positions, const Sizes &sizes, const Texture2D &texture) const;
+    void debugRender(const std::vector<float> &xPos,
+                     const std::vector<float> &yPos,
+                     const std::vector<float> &radiuses,
+                     const Texture2D &circleTexture) const;
 
     const float ROOT_SIZE;
 
   private:
-    const int MAX_DEPTH;
-    int m_currentDepth;
-    std::vector<float> m_numberOfQuadsOnSide; // the number of quads on x or y axis
-    std::vector<float> m_quadSize;            // the width of one quad
-    std::vector<int> m_numEntitiesAtDepth;
-    std::vector<std::unique_ptr<Depth>> m_depths;
-
-  private:
-    void split();
+    unsigned short m_currentDepth;
+    int m_totalNumberOfQuads;
+    unsigned short m_numberOfQuadsOnSide; // the number of quads on x or y axis
+    float m_quadSize;                     // the width of one quad
+    std::vector<Quad> m_quads;
 };
 
 #endif
