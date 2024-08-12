@@ -4,12 +4,16 @@
 #include "EntityTestState.h"
 #include "IsometricTestState.h"
 #include "QuadTreeTestState.h"
+#include "TileStructureTestState.h"
+
+// deug
+#include <iostream>
 
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
 
-    switchState(State::QUAD_TREE_TEST);
+    switchState(State::TILE_STRUCTURE_TEST);
 }
 
 Game::~Game() {
@@ -26,6 +30,9 @@ void Game::switchState(State state) {
         break;
     case State::QUAD_TREE_TEST:
         m_currentState = std::make_unique<QuadTreeTestState>();
+        break;
+    case State::TILE_STRUCTURE_TEST:
+        m_currentState = std::make_unique<TileStructureTestState>(m_gameOptions);
         break;
     default:
         break;
@@ -44,9 +51,22 @@ bool Game::webRun() {
 }
 
 void Game::gameLoop() {
-    handleInput();
-    update();
-    render();
+    try {
+        handleInput();
+    } catch (...) {
+        std::cout << "Error in handleInput\n";
+    }
+    try {
+        update();
+    } catch (...) {
+        std::cerr << "error in update\n";
+    }
+
+    try {
+        render();
+    } catch (...) {
+        std::cerr << "Error in render\n";
+    }
 }
 
 void Game::handleInput() {

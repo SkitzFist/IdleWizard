@@ -3,6 +3,10 @@
 
 #include "raylib.h"
 
+/*
+  TODO: Camera should be locked at world growth. Maybe one tile should be slightly smaller then the screen size
+*/
+
 class CameraInput {
   public:
     CameraInput();
