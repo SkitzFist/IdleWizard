@@ -3,10 +3,10 @@
 #include <iostream>
 #include <string>
 
-constexpr const int NUM_ENTITIES = 1;
-constexpr const float WORLD_SIZE = 1000.f;
-constexpr const int MAX_DEPTH = 5;
-int numEntities = 0;
+inline constexpr const int NUM_ENTITIES = 1;
+inline constexpr const float WORLD_SIZE = 1000.f;
+inline constexpr const int MAX_DEPTH = 5;
+inline int numEntities = 0;
 
 constexpr const float CIRCLE_MAX_SIZE = 50.f;
 
