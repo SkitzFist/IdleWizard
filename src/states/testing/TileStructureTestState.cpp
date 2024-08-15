@@ -53,7 +53,7 @@ void TileStructureTestState::createEntity(const float minX, const float minY) {
 
     int i = numEntities;
     m_positions.add(i, x, y);
-    m_sizes.add(i, radius);
+    m_sizes.add(i, radius, radius);
 
     ++numEntities;
 }
@@ -63,7 +63,7 @@ void TileStructureTestState::handleInput() {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), m_camera);
         m_positions.add(numEntities, mousePos.x, mousePos.y);
-        m_sizes.add(numEntities, CIRCLE_MAX_SIZE);
+        m_sizes.add(numEntities, CIRCLE_MAX_SIZE, CIRCLE_MAX_SIZE);
         ++numEntities;
     }
 }
@@ -86,10 +86,10 @@ void TileStructureTestState::update(float dt) {
     m_tileStructure.clear();
     for (int id = 0; id < numEntities; ++id) {
         m_tileStructure.addEntity(id,
-                                  m_positions.xPositions[id],
-                                  m_positions.yPositions[id],
-                                  m_sizes.radiuses[id],
-                                  m_sizes.radiuses[id]);
+                                  m_positions.data[id].x,
+                                  m_positions.data[id].y,
+                                  m_sizes.data[id].x,
+                                  m_sizes.data[id].y);
     }
 
     // get entities in range
@@ -115,10 +115,10 @@ void TileStructureTestState::render() const {
 
     // render entities
     for (const int id : m_entitiesInRange) {
-        float scale = m_sizes.radiuses[id] / CIRCLE_MAX_SIZE;
+        float scale = m_sizes.data[id].x / CIRCLE_MAX_SIZE;
         DrawTextureEx(
             m_texture,
-            {m_positions.xPositions[id], m_positions.yPositions[id]},
+            m_positions.data[id],
             0.f,
             scale,
             RED);
