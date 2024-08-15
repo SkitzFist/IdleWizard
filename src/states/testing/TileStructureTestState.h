@@ -11,8 +11,7 @@
 #include "TileStructure.h"
 
 // components
-#include "Positions.h"
-#include "Sizes.h"
+#include "VectorComponent.h"
 
 class TileStructureTestState : public GameState {
   public:
@@ -31,8 +30,8 @@ class TileStructureTestState : public GameState {
     CameraInput m_cameraInput;
 
     // components
-    Positions m_positions;
-    Sizes m_sizes;
+    VectorComponent m_positions;
+    VectorComponent m_sizes;
 
     // range
     Rectangle m_range;

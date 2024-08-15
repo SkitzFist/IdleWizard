@@ -10,10 +10,12 @@
 class Game {
   public:
     enum State {
+        PLAY_STATE,
+        // test states
         ENTITY_TEST,
         ISOMETRIC_TEST,
-        QUAD_TREE_TEST,
-        TILE_STRUCTURE_TEST
+        TILE_STRUCTURE_TEST,
+        ECS_TEST
     };
 
   public:

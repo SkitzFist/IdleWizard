@@ -5,8 +5,7 @@
 #include <vector>
 
 // debug
-#include "Positions.h"
-#include "Sizes.h"
+#include "VectorComponent.h"
 #include "raylib.h"
 
 struct Quad {
@@ -42,10 +41,12 @@ class TiledDataOrientedGrid {
     void clearEntities();
 
     // debug
-    void debugRender(const std::vector<float> &xPos,
-                     const std::vector<float> &yPos,
-                     const std::vector<float> &radiuses,
+    // deprecated since new component system
+    /*
+    void debugRender(const std::vector<float> &pos,,
+                     const std::vector<float> &,
                      const Texture2D &circleTexture) const;
+    */
 
     const float ROOT_SIZE;
 

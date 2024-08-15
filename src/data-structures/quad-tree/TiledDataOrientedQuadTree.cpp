@@ -75,9 +75,10 @@ void TiledDataOrientedGrid::clearEntities() {
 }
 
 /////////////////////////////////////////////////
-///              DEBUG                        ///
+///            DEPRECATED                     ///
 /////////////////////////////////////////////////
 
+/*
 void TiledDataOrientedGrid::debugRender(const std::vector<float> &xPos,
                                         const std::vector<float> &yPos,
                                         const std::vector<float> &radiuses,
@@ -110,3 +111,4 @@ void TiledDataOrientedGrid::debugRender(const std::vector<float> &xPos,
         }
     }
 }
+*/

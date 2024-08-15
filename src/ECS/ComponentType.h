@@ -1,0 +1,11 @@
+#ifndef IDLE_MINER_COMPONENT_TYPE_H
+#define IDLE_MINER_COMPONENT_TYPE_H
+
+enum ComponentType {
+    POSITION,
+    SIZE,
+    VELOCITY,
+    TOTAL_COMPONENTS
+};
+
+#endif

@@ -1,9 +1,11 @@
 #include "Game.h"
 
+#include "PlayState.h"
+
 // test states
+#include "EcsTestState.h"
 #include "EntityTestState.h"
 #include "IsometricTestState.h"
-#include "QuadTreeTestState.h"
 #include "TileStructureTestState.h"
 
 // deug
@@ -13,7 +15,7 @@ Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
 
-    switchState(State::TILE_STRUCTURE_TEST);
+    switchState(State::ECS_TEST);
 }
 
 Game::~Game() {
@@ -22,17 +24,20 @@ Game::~Game() {
 
 void Game::switchState(State state) {
     switch (state) {
+    case State::PLAY_STATE:
+        m_currentState = std::make_unique<PlayState>(m_gameOptions);
+        break;
     case State::ENTITY_TEST:
         m_currentState = std::make_unique<EntityTestState>();
         break;
     case State::ISOMETRIC_TEST:
         m_currentState = std::make_unique<IsometricTestState>(m_gameOptions);
         break;
-    case State::QUAD_TREE_TEST:
-        m_currentState = std::make_unique<QuadTreeTestState>();
-        break;
     case State::TILE_STRUCTURE_TEST:
         m_currentState = std::make_unique<TileStructureTestState>(m_gameOptions);
+        break;
+    case State::ECS_TEST:
+        m_currentState = std::make_unique<EcsTestState>();
         break;
     default:
         break;
@@ -53,6 +58,9 @@ bool Game::webRun() {
 void Game::gameLoop() {
     try {
         handleInput();
+        if (IsKeyPressed(KEY_Q)) {
+            switchState(State::ECS_TEST);
+        }
     } catch (...) {
         std::cout << "Error in handleInput\n";
     }
