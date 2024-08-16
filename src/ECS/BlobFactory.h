@@ -25,12 +25,12 @@ inline const void createBlob(EntityManager &entityManager,
     int entityId = entityManager.createEntity(EntityType::BLOB);
     componentManager.createEntity();
 
-    float min = minX + BLOB_WIDTH;
+    float min = minX;
     float max = tileStructure.currentMaxWidth() - BLOB_WIDTH;
     float x = static_cast<float>(GetRandomValue(min, max));
 
-    min = minY + BLOB_HEIGHT;
-    max = tileStructure.currentMaxHeight();
+    min = minY;
+    max = tileStructure.currentMaxHeight() - BLOB_HEIGHT;
     float y = static_cast<float>(GetRandomValue(min, max));
     positions.add(entityId, x, y);
     componentManager.addComponent(entityId, ComponentType::POSITION);

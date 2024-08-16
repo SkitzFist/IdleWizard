@@ -21,12 +21,12 @@ inline const void createTree(EntityManager &entityManager,
     int entityId = entityManager.createEntity(EntityType::TREE);
     componentManager.createEntity();
 
-    float min = minX + TREE_WIDTH;
+    float min = minX;
     float max = tileStructure.currentMaxWidth() - TREE_WIDTH;
     float x = static_cast<float>(GetRandomValue(min, max));
 
-    min = minY + TREE_HEIGHT;
-    max = tileStructure.currentMaxHeight();
+    min = minY;
+    max = tileStructure.currentMaxHeight() - TREE_HEIGHT;
     float y = static_cast<float>(GetRandomValue(min, max));
     positions.add(entityId, x, y);
     componentManager.addComponent(entityId, ComponentType::POSITION);

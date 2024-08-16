@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 
+#include "CameraInput.hpp"
+#include "GameOptions.h"
 #include "GameState.h"
 
 // spatial
@@ -15,7 +17,7 @@
 
 class EcsTestState : public GameState {
   public:
-    EcsTestState();
+    EcsTestState(const GameOptions &gameOptions);
     virtual ~EcsTestState() override;
     virtual void handleInput() override;
     virtual void update(float dt) override;
@@ -23,6 +25,7 @@ class EcsTestState : public GameState {
 
   private:
     Camera2D m_camera;
+    CameraInput m_cameraInput;
 
     // spatial
     TileStructure m_tileStructure;
@@ -35,6 +38,7 @@ class EcsTestState : public GameState {
     VectorComponent m_velocities;
 
   private:
+    void registerComponents();
     void renderUi() const;
 };
 
