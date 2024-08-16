@@ -10,6 +10,7 @@
 
 // deug
 #include <iostream>
+#include <string>
 
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
@@ -37,7 +38,7 @@ void Game::switchState(State state) {
         m_currentState = std::make_unique<TileStructureTestState>(m_gameOptions);
         break;
     case State::ECS_TEST:
-        m_currentState = std::make_unique<EcsTestState>();
+        m_currentState = std::make_unique<EcsTestState>(m_gameOptions);
         break;
     default:
         break;
@@ -72,6 +73,14 @@ void Game::gameLoop() {
 
     try {
         render();
+        const float x = 30.f;
+
+        const float yOffset = 30.f;
+        float y = 30.f;
+        int fontSize = 20;
+
+        std::string fpsText = "Fps: " + std::to_string(GetFPS());
+        DrawText(fpsText.c_str(), x, y, fontSize, RAYWHITE);
     } catch (...) {
         std::cerr << "Error in render\n";
     }
