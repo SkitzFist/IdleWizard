@@ -73,14 +73,6 @@ void Game::gameLoop() {
 
     try {
         render();
-        const float x = 30.f;
-
-        const float yOffset = 30.f;
-        float y = 30.f;
-        int fontSize = 20;
-
-        std::string fpsText = "Fps: " + std::to_string(GetFPS());
-        DrawText(fpsText.c_str(), x, y, fontSize, RAYWHITE);
     } catch (...) {
         std::cerr << "Error in render\n";
     }

@@ -1,9 +1,7 @@
 #include "EntityManager.h"
 #include "ComponentManager.h"
 #include "VectorComponent.h"
-
-// debug
-#include <iostream>
+#include "VectorComponentUtils.h"
 
 EntityManager::EntityManager() : lastId(0) {
 }
@@ -13,7 +11,11 @@ int EntityManager::createEntity(EntityType entityType) {
     return (int)entities.size() - 1;
 }
 
-void EntityManager::destroyEntity(const int id, ComponentManager &componentManager) {
+bool EntityManager::destroyEntity(const int id, ComponentManager &componentManager) {
+    if (entities.empty()) {
+        return false;
+    }
+
     const int lastId = (int)entities.size() - 1;
     EntityType entityTypeA = entities[id];
     EntityType entityTypeB = entities[lastId];
@@ -22,29 +24,35 @@ void EntityManager::destroyEntity(const int id, ComponentManager &componentManag
         std::swap(entities[id], entities[lastId]);
     }
 
-    entities.pop_back();
-
     // TODO this belongs more to the componentManager, but I'll leave it here for now.
-    std::unordered_set<ComponentType> allComponents;
-    allComponents.insert(componentManager.componentLookup[id].begin(), componentManager.componentLookup[id].end());
-    allComponents.insert(componentManager.componentLookup[lastId].begin(), componentManager.componentLookup[lastId].end());
+    std::unordered_set<ComponentType> bothEntitiesComponents;
+    bothEntitiesComponents.insert(componentManager.componentLookup[id].begin(), componentManager.componentLookup[id].end());
+    bothEntitiesComponents.insert(componentManager.componentLookup[lastId].begin(), componentManager.componentLookup[lastId].end());
 
-    for (const ComponentType component : allComponents) {
+    for (const ComponentType component : bothEntitiesComponents) {
         bool aHasComponent = componentManager.hasComponent(id, component);
         bool bHasComponent = componentManager.hasComponent(lastId, component);
+        VectorComponent *c = componentManager.vectorComponentLookup[component];
+        bool success = true;
 
         if (aHasComponent && bHasComponent) {
-            componentManager.vectorComponentLookup[component]->SwapDataThenPop(id);
-
+            success = swapDataThenPop(*c, id);
         } else if (aHasComponent && !bHasComponent) {
-            componentManager.vectorComponentLookup[component]->swapDataAndIdThenPop(id);
-
+            success = swapDataAndIdThenPop(*c, id);
         } else if (!aHasComponent && bHasComponent) {
-            componentManager.vectorComponentLookup[component]->switchId(lastId, id);
+            success = switchId(*c, lastId, id);
+        }
+
+        if (!success) {
+            TraceLog(LOG_ERROR, "EntityManager: Could not remove entity");
+            return false;
         }
     }
-    // TODO remove from spatial (could maybe do that as a first step, before this method call, instead)
+
+    entities.pop_back();
     componentManager.removeEntity(id);
+
+    return true;
 }
 
 std::size_t EntityManager::getNumEntities() const {
@@ -53,11 +61,4 @@ std::size_t EntityManager::getNumEntities() const {
 
 void EntityManager::clear() {
     entities.clear();
-}
-
-void EntityManager::print() {
-    std::cout << "\nEntity Manager:\n";
-    for (size_t i = 0; i < entities.size(); ++i) {
-        std::cout << "[" << i << "]: " << toString(entities[i]) << '\n';
-    }
 }

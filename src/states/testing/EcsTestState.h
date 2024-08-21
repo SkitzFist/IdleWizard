@@ -1,6 +1,8 @@
 #ifndef IDLE_MINER_ECS_TEST_STATE_H
 #define IDLE_MINER_ECS_TEST_STATE_H
 
+#include <unordered_set>
+
 #include "raylib.h"
 
 #include "CameraInput.hpp"
@@ -29,6 +31,8 @@ class EcsTestState : public GameState {
 
     // spatial
     TileStructure m_tileStructure;
+    Rectangle m_range;
+    std::unordered_set<int> m_entitiesInRange;
 
     // Ecs
     EntityManager m_entityManager;
@@ -37,8 +41,13 @@ class EcsTestState : public GameState {
     VectorComponent m_sizes;
     VectorComponent m_velocities;
 
+    // textures
+    Texture2D m_blobTexture;
+    Texture2D m_treeTexture;
+
   private:
     void registerComponents();
+    void setRange();
     void renderUi() const;
 };
 
