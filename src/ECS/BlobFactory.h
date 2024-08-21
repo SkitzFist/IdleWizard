@@ -38,8 +38,8 @@ inline const void createBlob(EntityManager &entityManager,
     sizes.add(entityId, BLOB_WIDTH, BLOB_HEIGHT);
     componentManager.addComponent(entityId, ComponentType::SIZE);
 
-    float velX = static_cast<float>(GetRandomValue(2, 20) / 10.f);
-    float velY = static_cast<float>(GetRandomValue(2, 20) / 10.f);
+    float velX = static_cast<float>(GetRandomValue(-200, 200));
+    float velY = static_cast<float>(GetRandomValue(-200, 200));
     velocities.add(entityId, velX, velY);
     componentManager.addComponent(entityId, ComponentType::VELOCITY);
 }

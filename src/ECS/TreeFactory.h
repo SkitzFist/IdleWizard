@@ -7,7 +7,7 @@
 
 #include "TileStructure.h"
 
-inline constexpr const float TREE_WIDTH = 50.f;
+inline constexpr const float TREE_WIDTH = 10.f;
 inline constexpr const float TREE_HEIGHT = 250.f;
 
 inline const void createTree(EntityManager &entityManager,
