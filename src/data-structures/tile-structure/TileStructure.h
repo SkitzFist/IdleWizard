@@ -12,6 +12,8 @@
         If this ever becomes a problem try this solution:
           Batch clear. By clearing 1 / x of the structure at a time. Would also need to gather what entities has
           been cleared so they can be re-added. Clearing would have to take an unordered_set, startIndex and endIndex.
+
+          can skip this as I created a faster structure look at TileIndexStructure
 */
 
 class TileStructure {

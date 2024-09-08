@@ -29,6 +29,6 @@ bool ComponentManager::hasComponent(int entityId, ComponentType componentType) c
 ///                COMPONENTS                   ///
 //////////////////////////////////////////////////
 
-void ComponentManager::registerVectorComponent(ComponentType type, VectorComponent *component) {
+void ComponentManager::registerVectorComponent(ComponentType type, Component *component) {
     vectorComponentLookup[type] = component;
 }

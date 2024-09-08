@@ -1,22 +1,23 @@
-#ifndef IDLE_MINER_VECTOR_COMPONENT_H
-#define IDLE_MINER_VECTOR_COMPONENT_H
+#ifndef IDLE_MINER_BASE_COMPONENT_H
+#define IDLE_MINER_BASE_COMPONENT_H
 
 #include <vector>
 
 #include "raylib.h"
 
-// debug
-#include <iostream>
+#include "ComponentType.h"
 
-struct VectorComponent {
-    std::vector<Vector2> data;
+struct BaseComponent {
     std::vector<int> entityIds;
+    ComponentType type;
+};
 
+struct Vector2Component : public BaseComponent {
+    std::vector<Vector2> data;
     void add(const int id, const float x, const float y) {
-        data.push_back({x, y});
         entityIds.emplace_back(id);
+        data.push_back({x, y});
     }
-
     void reserve(int size) {
         entityIds.reserve(size);
         data.reserve(size);

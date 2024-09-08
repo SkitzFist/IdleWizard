@@ -1,9 +1,12 @@
 #include "EntityManager.h"
+#include "Component.h"
 #include "ComponentManager.h"
-#include "VectorComponent.h"
-#include "VectorComponentUtils.h"
+#include "ComponentUtils.h"
 
-EntityManager::EntityManager() : lastId(0) {
+// debug
+#include "raylib.h"
+
+EntityManager::EntityManager() {
 }
 
 int EntityManager::createEntity(EntityType entityType) {
@@ -32,13 +35,13 @@ bool EntityManager::destroyEntity(const int id, ComponentManager &componentManag
     for (const ComponentType component : bothEntitiesComponents) {
         bool aHasComponent = componentManager.hasComponent(id, component);
         bool bHasComponent = componentManager.hasComponent(lastId, component);
-        VectorComponent *c = componentManager.vectorComponentLookup[component];
+        Component *c = componentManager.vectorComponentLookup[component];
         bool success = true;
 
         if (aHasComponent && bHasComponent) {
-            success = swapDataThenPop(*c, id);
+            success = swapDataThenPopBack(*c, id);
         } else if (aHasComponent && !bHasComponent) {
-            success = swapDataAndIdThenPop(*c, id);
+            success = swapDataAndIdThenPopBack(*c, id);
         } else if (!aHasComponent && bHasComponent) {
             success = switchId(*c, lastId, id);
         }
@@ -53,10 +56,6 @@ bool EntityManager::destroyEntity(const int id, ComponentManager &componentManag
     componentManager.removeEntity(id);
 
     return true;
-}
-
-std::size_t EntityManager::getNumEntities() const {
-    return entities.size();
 }
 
 void EntityManager::clear() {

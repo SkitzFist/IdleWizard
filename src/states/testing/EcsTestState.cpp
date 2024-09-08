@@ -5,14 +5,17 @@
 #include "BlobFactory.h"
 #include "TreeFactory.h"
 
+#include "ComponentUtils.h"
 #include "MoveSystem.h"
-#include "VectorComponentUtils.h"
 
 #include "Timer.h"
 
 Timer timer;
-
-EcsTestState::EcsTestState(const GameOptions &gameOptions) : m_tileStructure(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, 1, 10) {
+inline constexpr const int numEntities = 100000;
+EcsTestState::EcsTestState(const GameOptions &gameOptions) : m_tileStructure(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, 1, 100),
+                                                             m_positions(sizeof(Vector2), numEntities),
+                                                             m_sizes(sizeof(Vector2), numEntities),
+                                                             m_velocities(sizeof(Vector2), numEntities) {
     m_camera.offset = {0.f, 0.f};
     m_camera.target = {0.f, 0.f};
     m_camera.rotation = 0.f;
@@ -40,7 +43,7 @@ EcsTestState::EcsTestState(const GameOptions &gameOptions) : m_tileStructure(gam
 
     registerComponents();
 
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < numEntities; ++i) {
         if (GetRandomValue(0, 100) > 50) {
             createBlob(m_entityManager, m_componentManager, m_positions, m_sizes, m_velocities, m_tileStructure, 0.f, 0.f);
         } else {
@@ -63,7 +66,7 @@ void EcsTestState::handleInput() {
 
     // remove random entity
     if (IsKeyPressed(KEY_SPACE)) {
-        int index = GetRandomValue(0, (int)m_entityManager.getNumEntities() - 1);
+        int index = GetRandomValue(0, (int)m_entityManager.entities.size() - 1);
         m_entityManager.destroyEntity(index, m_componentManager);
     }
 
@@ -86,16 +89,17 @@ void EcsTestState::update(float dt) {
 
     // Deletion test
     // if (m_entityManager.entities.size() > 0) {
-    //     int index = GetRandomValue(0, (int)m_entityManager.getNumEntities() - 1);
+    //     int index = GetRandomValue(0, (int)m_entityManager.entities.size() - 1);
     //     m_entityManager.destroyEntity(index, m_componentManager);
     // }
 
     // clear tile structure and re-add.
     m_tileStructure.clear();
-    for (std::size_t entity = 0; entity < m_positions.data.size(); ++entity) {
+    for (int entity = 0; entity < m_positions.size; ++entity) {
+
         m_tileStructure.addEntity(entity,
-                                  m_positions.data[entity].x, m_positions.data[entity].y,
-                                  m_sizes.data[entity].x, m_sizes.data[entity].y);
+                                  readData<Vector2>(m_positions, entity).x, readData<Vector2>(m_positions, entity).y,
+                                  readData<Vector2>(m_sizes, entity).x, readData<Vector2>(m_sizes, entity).y);
     }
 
     // get entities in range
@@ -120,7 +124,7 @@ void EcsTestState::render() const {
 
     BeginMode2D(m_camera);
 
-    // m_tileStructure.debugRender();
+    m_tileStructure.debugRender();
 
     for (const int entityID : m_entitiesInRange) {
         EntityType type = m_entityManager.entities[entityID];
@@ -139,8 +143,8 @@ void EcsTestState::render() const {
         default:
             break;
         }
-
-        DrawTextureEx(*texture, m_positions.data[posIndex], 1.f, 1.f, c);
+        Vector2 pos = readData<Vector2>(m_positions, posIndex);
+        DrawTextureEx(*texture, pos, 1.f, 1.f, c);
     }
 
     EndMode2D();

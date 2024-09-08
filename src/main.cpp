@@ -8,10 +8,17 @@
 #include "GameOptions.h"
 #include "raylib.h"
 
+// #include "tests/ECS/ComponentTesting.hpp"
+#include "tests/data-structures/SpatialTest.hpp"
+
 constexpr const int SCREEN_WIDTH = 1920;
 constexpr const int SCREEN_HEIGHT = 1080;
 
 int main() {
+
+    spatialTest();
+    return 0;
+
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(webLoob, 0, 1);
 #else

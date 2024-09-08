@@ -5,8 +5,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Component.h"
 #include "ComponentType.h"
-#include "VectorComponent.h"
 
 struct ComponentManager {
     // entity
@@ -18,8 +18,8 @@ struct ComponentManager {
     std::vector<std::unordered_set<ComponentType>> componentLookup;
 
     // Component
-    void registerVectorComponent(ComponentType type, VectorComponent *component);
-    std::unordered_map<ComponentType, VectorComponent *> vectorComponentLookup;
+    void registerVectorComponent(ComponentType type, Component *component);
+    std::unordered_map<ComponentType, Component *> vectorComponentLookup;
 };
 
 #endif
