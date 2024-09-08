@@ -8,16 +8,12 @@
 struct ComponentManager;
 
 struct EntityManager {
+    std::vector<EntityType> entities;
+
     EntityManager();
+    void clear();
     int createEntity(EntityType entityType);
     bool destroyEntity(const int id, ComponentManager &componentManager);
-
-    std::size_t getNumEntities() const;
-    void clear();
-
-    // member variables
-    int lastId;
-    std::vector<EntityType> entities;
 };
 
 #endif

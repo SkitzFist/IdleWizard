@@ -3,7 +3,8 @@
 #include "EntityManager.h"
 #include "EntityType.h"
 
-#include "VectorComponent.h"
+#include "Component.h"
+#include "ComponentUtils.h"
 
 #include "TileStructure.h"
 
@@ -12,8 +13,8 @@ inline constexpr const float TREE_HEIGHT = 250.f;
 
 inline const void createTree(EntityManager &entityManager,
                              ComponentManager &componentManager,
-                             VectorComponent &positions,
-                             VectorComponent &sizes,
+                             Component &positions,
+                             Component &sizes,
                              TileStructure &tileStructure,
                              float minX,
                              float minY) {
@@ -28,9 +29,9 @@ inline const void createTree(EntityManager &entityManager,
     min = minY;
     max = tileStructure.currentMaxHeight() - TREE_HEIGHT;
     float y = static_cast<float>(GetRandomValue(min, max));
-    positions.add(entityId, x, y);
+    add(positions, entityId, Vector2{x, y});
     componentManager.addComponent(entityId, ComponentType::POSITION);
 
-    sizes.add(entityId, TREE_WIDTH, TREE_HEIGHT);
+    add(sizes, entityId, Vector2{TREE_WIDTH, TREE_HEIGHT});
     componentManager.addComponent(entityId, ComponentType::SIZE);
 }

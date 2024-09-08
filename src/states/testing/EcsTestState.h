@@ -13,9 +13,9 @@
 #include "TileStructure.h"
 
 // ECS
+#include "Component.h"
 #include "ComponentManager.h"
 #include "EntityManager.h"
-#include "VectorComponent.h"
 
 class EcsTestState : public GameState {
   public:
@@ -37,9 +37,9 @@ class EcsTestState : public GameState {
     // Ecs
     EntityManager m_entityManager;
     ComponentManager m_componentManager;
-    VectorComponent m_positions;
-    VectorComponent m_sizes;
-    VectorComponent m_velocities;
+    Component m_positions;
+    Component m_sizes;
+    Component m_velocities;
 
     // textures
     Texture2D m_blobTexture;
