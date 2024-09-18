@@ -39,4 +39,5 @@ settings.json
 
 # Builds
 build/
+build_desktop/
 build_web/

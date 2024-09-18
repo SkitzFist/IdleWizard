@@ -11,38 +11,52 @@
 
 #include "TileStructure.h"
 
+//debug
+#include <iostream>
+
 inline constexpr const float BLOB_WIDTH = 50.f;
 inline constexpr const float BLOB_HEIGHT = 50.f;
 
-inline const void createBlob(EntityManager &entityManager,
+inline const void createBlobAt(EntityManager &entityManager,
                              ComponentManager &componentManager,
                              Component &positions,
                              Component &sizes,
                              Component &velocities,
-                             TileStructure &tileStructure,
-                             float minX,
-                             float minY) {
+                             float x,
+                             float y) {
 
     int entityId = entityManager.createEntity(EntityType::BLOB);
     componentManager.createEntity();
 
-    float min = minX;
-    float max = tileStructure.currentMaxWidth() - BLOB_WIDTH;
-    float x = static_cast<float>(GetRandomValue(min, max));
-
-    min = minY;
-    max = tileStructure.currentMaxHeight() - BLOB_HEIGHT;
-    float y = static_cast<float>(GetRandomValue(min, max));
     add(positions, entityId, Vector2{x, y});
-    componentManager.addComponent(entityId, ComponentType::POSITION);
+    componentManager.addComponentToEntity(entityId, ComponentType::POSITION);
 
     add(sizes, entityId, Vector2{BLOB_WIDTH, BLOB_HEIGHT});
-    componentManager.addComponent(entityId, ComponentType::SIZE);
+    componentManager.addComponentToEntity(entityId, ComponentType::SIZE);
 
     float velX = static_cast<float>(GetRandomValue(-200, 200));
     float velY = static_cast<float>(GetRandomValue(-200, 200));
     add(velocities, entityId, Vector2{velX, velY});
-    componentManager.addComponent(entityId, ComponentType::VELOCITY);
+    componentManager.addComponentToEntity(entityId, ComponentType::VELOCITY);
+}
+
+inline const void createBlobAt(EntityManager &entityManager,
+                               ComponentManager &componentManager,
+                               float x,
+                               float y) {
+    int entityId = entityManager.createEntity(EntityType::BLOB);
+    componentManager.createEntity();
+
+    add(componentManager.components[ComponentType::POSITION], entityId, Vector2{x, y});
+    componentManager.addComponentToEntity(entityId, ComponentType::POSITION);
+
+    add(componentManager.components[ComponentType::SIZE], entityId, Vector2{BLOB_WIDTH, BLOB_HEIGHT});
+    componentManager.addComponentToEntity(entityId, ComponentType::SIZE);
+
+    float velX = static_cast<float>(GetRandomValue(-200, 200));
+    float velY = static_cast<float>(GetRandomValue(-200, 200));
+    add(componentManager.components[ComponentType::VELOCITY], entityId, Vector2{velX, velY});
+    componentManager.addComponentToEntity(entityId, ComponentType::VELOCITY);
 }
 
 #endif

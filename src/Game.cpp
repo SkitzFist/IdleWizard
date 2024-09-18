@@ -3,20 +3,20 @@
 #include "PlayState.h"
 
 // test states
-#include "EcsTestState.h"
-#include "EntityTestState.h"
 #include "IsometricTestState.h"
-#include "TileStructureTestState.h"
+#include "SpatialTestState.h"
 
 // deug
 #include <iostream>
 #include <string>
 
+inline constexpr const Game::State initState = Game::State::PLAY_STATE;
+
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
 
-    switchState(State::ECS_TEST);
+    switchState(initState);
 }
 
 Game::~Game() {
@@ -28,17 +28,12 @@ void Game::switchState(State state) {
     case State::PLAY_STATE:
         m_currentState = std::make_unique<PlayState>(m_gameOptions);
         break;
-    case State::ENTITY_TEST:
-        m_currentState = std::make_unique<EntityTestState>();
         break;
     case State::ISOMETRIC_TEST:
         m_currentState = std::make_unique<IsometricTestState>(m_gameOptions);
         break;
-    case State::TILE_STRUCTURE_TEST:
-        m_currentState = std::make_unique<TileStructureTestState>(m_gameOptions);
-        break;
-    case State::ECS_TEST:
-        m_currentState = std::make_unique<EcsTestState>(m_gameOptions);
+    case State::SPATIAL_TEST:
+        m_currentState = std::make_unique<SpatialTestState>(m_gameOptions);
         break;
     default:
         break;
@@ -53,14 +48,14 @@ void Game::run() {
 
 bool Game::webRun() {
     gameLoop();
-    return !WindowShouldClose();
+    return true;
 }
 
 void Game::gameLoop() {
     try {
         handleInput();
         if (IsKeyPressed(KEY_Q)) {
-            switchState(State::ECS_TEST);
+            switchState(initState);
         }
     } catch (...) {
         std::cout << "Error in handleInput\n";

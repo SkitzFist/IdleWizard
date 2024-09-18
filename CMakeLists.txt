@@ -56,7 +56,7 @@ if(EMSCRIPTEN)
   target_compile_options(${PROJECT_NAME} PRIVATE -msimd128 -msse4.1 -O3 -pthread)
   set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".html"
-    LINK_FLAGS "-msimd128 -O3 -s USE_GLFW=3 -s -sFULL_ES2 -sALLOW_MEMORY_GROWTH -DPLATFORM_WEB -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=16 --shell-file ${CMAKE_SOURCE_DIR}/Shell.html"
+    LINK_FLAGS "-O3 -s USE_GLFW=3 -sALLOW_MEMORY_GROWTH -DPLATFORM_WEB --shell-file ${CMAKE_SOURCE_DIR}/Shell.html" #-s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=16 -s -sFULL_ES2  -msimd128
   )
 else()
   if(MSVC)
@@ -64,7 +64,7 @@ else()
   else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-variable) # -mavx2 -mfma -Wall -Wextra -O3 -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5
     set_target_properties(${PROJECT_NAME} PROPERTIES
-    LINK_FLAGS "-O3" # -msse2 -mfpmath=sse  -ftree-vectorizer-verbose=5 -lwinmm -lgdi32 -luser32
+    LINK_FLAGS "-O3 -msse2"# -mfpmath=sse  -ftree-vectorizer-verbose=5 -lwinmm -lgdi32 -luser32
 )
   endif()
 endif()

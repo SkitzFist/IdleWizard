@@ -1,5 +1,5 @@
 #ifndef IDLE_MINER_MOVE_SYSTEM_H
-#define IDLE_MINER_MOVE_SYSTEM_h
+#define IDLE_MINER_MOVE_SYSTEM_H
 
 #include "Component.h"
 #include "ComponentUtils.h"
