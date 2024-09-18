@@ -12,10 +12,8 @@ class Game {
     enum State {
         PLAY_STATE,
         // test states
-        ENTITY_TEST,
         ISOMETRIC_TEST,
-        TILE_STRUCTURE_TEST,
-        ECS_TEST
+        SPATIAL_TEST
     };
 
   public:

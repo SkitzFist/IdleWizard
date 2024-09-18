@@ -29,21 +29,21 @@ bool EntityManager::destroyEntity(const int id, ComponentManager &componentManag
 
     // TODO this belongs more to the componentManager, but I'll leave it here for now.
     std::unordered_set<ComponentType> bothEntitiesComponents;
-    bothEntitiesComponents.insert(componentManager.componentLookup[id].begin(), componentManager.componentLookup[id].end());
-    bothEntitiesComponents.insert(componentManager.componentLookup[lastId].begin(), componentManager.componentLookup[lastId].end());
+    bothEntitiesComponents.insert(componentManager.entityToComponentLookup[id].begin(), componentManager.entityToComponentLookup[id].end());
+    bothEntitiesComponents.insert(componentManager.entityToComponentLookup[lastId].begin(), componentManager.entityToComponentLookup[lastId].end());
 
     for (const ComponentType component : bothEntitiesComponents) {
         bool aHasComponent = componentManager.hasComponent(id, component);
         bool bHasComponent = componentManager.hasComponent(lastId, component);
-        Component *c = componentManager.vectorComponentLookup[component];
+        Component& c = componentManager.components[component];
         bool success = true;
 
         if (aHasComponent && bHasComponent) {
-            success = swapDataThenPopBack(*c, id);
+            success = swapDataThenPopBack(c, id);
         } else if (aHasComponent && !bHasComponent) {
-            success = swapDataAndIdThenPopBack(*c, id);
+            success = swapDataAndIdThenPopBack(c, id);
         } else if (!aHasComponent && bHasComponent) {
-            success = switchId(*c, lastId, id);
+            success = switchId(c, lastId, id);
         }
 
         if (!success) {

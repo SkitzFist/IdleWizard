@@ -89,6 +89,7 @@ inline int getIndex(const Component &component, const int entityID) {
         }
     }
 
+    std::cout << "ComponentUtils: could not find ID: " << entityID << " Returning -1\n";
     return -1;
 }
 
@@ -147,6 +148,7 @@ inline bool swapDataThenPopBack(Component &c, const int id) {
 
     moveDataBackToIndex(c, id);
     --c.size; // no need to actually delete data as it's out of the span now.
+    c.entityIds.pop_back();
 
     return true;
 }
@@ -186,5 +188,9 @@ inline bool switchId(Component &c, const int from, const int to) {
 
     return true;
 }
+
+//////////////////////////////////////////////
+///          Printing                     ///
+////////////////////////////////////////////
 
 #endif

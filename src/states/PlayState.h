@@ -5,10 +5,10 @@
 
 #include "GameOptions.h"
 #include "GameState.h"
-#include "TileStructure.h"
 
-// components
-#include "VectorComponent.h"
+#include "EntityManager.h"
+#include "ComponentManager.h"
+#include "TileStructure.h"
 
 class PlayState : public GameState {
   public:
@@ -21,13 +21,19 @@ class PlayState : public GameState {
   private:
     const GameOptions &m_gameOptions;
     Camera2D m_camera;
-    TileStructure m_tileStructure;
-
-    // ECS
-    VectorComponent m_positions;
-    VectorComponent m_sizes;
+    EntityManager m_entityManager;
+    ComponentManager m_componentManager;
+    TileStructure m_spatialStructure;
 
   private:
+    //init
+    void registerComponents();
+
+    //input
+
+    //update
+    void rebuildSpatialStructure();
+    //render
     void drawUi() const;
 };
 

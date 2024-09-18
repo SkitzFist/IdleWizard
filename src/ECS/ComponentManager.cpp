@@ -1,34 +1,43 @@
 #include "ComponentManager.h"
 
+//debug
+#include <iostream>
+
+ComponentManager::ComponentManager() {
+}
+
 ////////////////////////////////////////////////////
 ///                ENTITIES                     ///
 //////////////////////////////////////////////////
 
 void ComponentManager::createEntity() {
-    componentLookup.emplace_back();
+    entityToComponentLookup.emplace_back();
 }
 
-void ComponentManager::addComponent(int entityId, ComponentType componentType) {
-    componentLookup[entityId].emplace(componentType);
+void ComponentManager::addComponentToEntity(int entityId, ComponentType componentType) {
+    entityToComponentLookup[entityId].emplace(componentType);
 }
 
-void ComponentManager::removeComponent(int entityId, ComponentType componentType) {
-    componentLookup[entityId].erase(componentType);
+void ComponentManager::removeComponentFromEntity(int entityId, ComponentType componentType) {
+    entityToComponentLookup[entityId].erase(componentType);
 }
 
 void ComponentManager::removeEntity(int entityId) {
-    std::swap(componentLookup[entityId], componentLookup.back());
-    componentLookup.pop_back();
+    std::swap(entityToComponentLookup[entityId], entityToComponentLookup.back());
+    entityToComponentLookup.pop_back();
 }
 
 bool ComponentManager::hasComponent(int entityId, ComponentType componentType) const {
-    return componentLookup[entityId].find(componentType) != componentLookup[entityId].end();
+    return entityToComponentLookup[entityId].find(componentType) != entityToComponentLookup[entityId].end();
 }
 
 ////////////////////////////////////////////////////
 ///                COMPONENTS                   ///
 //////////////////////////////////////////////////
 
-void ComponentManager::registerVectorComponent(ComponentType type, Component *component) {
-    vectorComponentLookup[type] = component;
+void ComponentManager::registerComponent(const ComponentType type, const size_t dataTypeSize, const int initCapacity) {
+    if((int) type != components.size()){
+        std::cerr << "Components added in wrong order\n";
+    }
+    components.emplace(type, Component(dataTypeSize, initCapacity));
 }
