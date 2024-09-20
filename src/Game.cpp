@@ -4,7 +4,6 @@
 
 // test states
 #include "IsometricTestState.h"
-#include "SpatialTestState.h"
 
 // deug
 #include <iostream>
@@ -31,9 +30,6 @@ void Game::switchState(State state) {
         break;
     case State::ISOMETRIC_TEST:
         m_currentState = std::make_unique<IsometricTestState>(m_gameOptions);
-        break;
-    case State::SPATIAL_TEST:
-        m_currentState = std::make_unique<SpatialTestState>(m_gameOptions);
         break;
     default:
         break;

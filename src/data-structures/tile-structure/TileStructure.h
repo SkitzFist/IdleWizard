@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_TILE_STRUCTURE_H
-#define IDLE_MINER_TILE_STRUCTURE_H
+#ifndef IDLE_WIZARD_TILE_STRUCTURE_H
+#define IDLE_WIZARD_TILE_STRUCTURE_H
 
 #include <algorithm>
 #include <execution>

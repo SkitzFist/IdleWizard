@@ -1,14 +1,10 @@
-#ifndef IDLE_MINER_PLAY_STATE_H
-#define IDLE_MINER_PLAY_STATE_H
+#ifndef IDLE_WIZARD_PLAY_STATE_H
+#define IDLE_WIZARD_PLAY_STATE_H
 
 #include "raylib.h"
 
 #include "GameOptions.h"
 #include "GameState.h"
-
-#include "EntityManager.h"
-#include "ComponentManager.h"
-#include "TileStructure.h"
 
 class PlayState : public GameState {
   public:
@@ -21,9 +17,6 @@ class PlayState : public GameState {
   private:
     const GameOptions &m_gameOptions;
     Camera2D m_camera;
-    EntityManager m_entityManager;
-    ComponentManager m_componentManager;
-    TileStructure m_spatialStructure;
 
   private:
     //init

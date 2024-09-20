@@ -1,9 +1,8 @@
-#ifndef IDLE_MINER_ENTITY_TYPES_H
-#define IDLE_MINER_ENTITY_TYPES_H
+#ifndef IDLE_WIZARD_ENTITY_TYPES_H
+#define IDLE_WIZARD_ENTITY_TYPES_H
 
 enum class EntityType {
-    BLOB,
-    TREE
+    BLOB
 };
 
 #endif
