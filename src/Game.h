@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_GAME_H_
-#define IDLE_MINER_GAME_H_
+#ifndef IDLE_WIZARD_GAME_H_
+#define IDLE_WIZARD_GAME_H_
 
 #include <memory>
 
@@ -12,8 +12,7 @@ class Game {
     enum State {
         PLAY_STATE,
         // test states
-        ISOMETRIC_TEST,
-        SPATIAL_TEST
+        ISOMETRIC_TEST
     };
 
   public:

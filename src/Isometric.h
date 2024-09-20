@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_ISOMETRIC_h_
-#define IDLE_MINER_ISOMETRIC_h_
+#ifndef IDLE_WIZARD_ISOMETRIC_h_
+#define IDLE_WIZARD_ISOMETRIC_h_
 
 #include "GameOptions.h"
 #include "raylib.h"

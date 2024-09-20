@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_GAME_OPTIONS_H_
-#define IDLE_MINER_GAME_OPTIONS_H_
+#ifndef IDLE_WIZARD_GAME_OPTIONS_H_
+#define IDLE_WIZARD_GAME_OPTIONS_H_
 
 struct GameOptions {
     const int SCREEN_WIDTH;

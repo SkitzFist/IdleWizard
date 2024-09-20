@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(IdleMiner CXX C)
+project(IdleWizard CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

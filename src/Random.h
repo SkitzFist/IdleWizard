@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_RANDOM_H
-#define IDLE_MINER_RANDOM_H
+#ifndef IDLE_WIZARD_RANDOM_H
+#define IDLE_WIZARD_RANDOM_H
 
 #include <random>
 

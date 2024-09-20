@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_GAME_STATE_H_
-#define IDLE_MINER_GAME_STATE_H_
+#ifndef IDLE_WIZARD_GAME_STATE_H_
+#define IDLE_WIZARD_GAME_STATE_H_
 
 class GameState {
   public:

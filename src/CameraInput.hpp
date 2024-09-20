@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_CAMERA_INPUT
-#define IDLE_MINER_CAMERA_INPUT
+#ifndef IDLE_WIZARD_CAMERA_INPUT
+#define IDLE_WIZARD_CAMERA_INPUT
 
 #include "raylib.h"
 

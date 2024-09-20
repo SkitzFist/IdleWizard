@@ -1,5 +1,5 @@
-#ifndef IDLE_MINER_TIMER_H
-#define IDLE_MINER_TIMER_H
+#ifndef IDLE_WIZARD_TIMER_H
+#define IDLE_WIZARD_TIMER_H
 
 #include <chrono>
 
