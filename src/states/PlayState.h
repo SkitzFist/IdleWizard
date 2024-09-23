@@ -6,6 +6,11 @@
 #include "GameOptions.h"
 #include "GameState.h"
 
+#include "TileMap.h"
+
+#include "ComponentManager.h"
+#include "Component.h"
+
 class PlayState : public GameState {
   public:
     PlayState(const GameOptions &GameOptions);
@@ -18,6 +23,10 @@ class PlayState : public GameState {
     const GameOptions &m_gameOptions;
     Camera2D m_camera;
 
+    TileMap m_tileMap;
+
+    Components m_components;
+
   private:
     //init
     void registerComponents();
@@ -25,7 +34,9 @@ class PlayState : public GameState {
     //input
 
     //update
-    void rebuildSpatialStructure();
+    void rebuildTileMap();
+    void rebuildTileMapEntity();
+
     //render
     void drawUi() const;
 };

@@ -6,6 +6,8 @@
 #include "GameOptions.h"
 #include "raylib.h"
 
+#include "tests/data-structures/ComponentTest.h"
+
 constexpr const int SCREEN_WIDTH = 1920;
 constexpr const int SCREEN_HEIGHT = 1080;
 
@@ -30,6 +32,10 @@ void webLoop() {
 #endif
 
 int main(int argc, char* argv[]) {  
+
+    // if(!ComponentTest()){
+    //     return -1;
+    // }
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(webLoop, 0, 1);
