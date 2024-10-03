@@ -126,6 +126,16 @@ public:
 
   //Only A has Component
   void swapDataAndIdPopBack(const int entityId){
+
+    /*
+      todo, coudl make this more effective by just moving the entire thing
+      say [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        remove 2
+              [3, 4, 5, 6, 7, 8, 9]
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        that would just overwrite the values, and keeping the entire thing sorted at the same time.
+        using the sort function is some overhead as the value is swapped for each position.
+    */
     int index = getIndex(entityId);
     if(index == -1){
       return;
