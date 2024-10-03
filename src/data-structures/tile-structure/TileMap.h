@@ -25,6 +25,10 @@ struct TileMap{
         }
     }
 
+    void setEntitiesSize(size_t size){
+        entities.resize(size);
+    }
+
     void add(const int id, const int x, const int y, const int width, const int height) {
         int gridX = x / tileWidth;
         int gridY = y / tileHeight;
@@ -60,8 +64,8 @@ struct TileMap{
         for (int gridY = minGridY; gridY <= maxGridY; ++gridY) {
             for (int gridX = minGridX; gridX <= maxGridX; ++gridX) {
                 const int worldIndex = gridY * COLUMNS + gridX;
-                for (const int id : m_map[worldIndex]) {
-                    out.emplace_back(id);
+                for (int i = 0; i < m_map[worldIndex].size(); ++i) {
+                    out.emplace_back(m_map[worldIndex][i]);
                 }
             }
         }

@@ -8,14 +8,12 @@
 inline Timer t1;
 inline Timer t2;
 
-inline int numEntities = 1000;
-
-struct Transformator{
-    float x, y, width, height;
-};
+inline int numEntities = 100000;
 
 PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
-                                                       m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities){
+                                                       m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
+                                                       m_ecs(),
+                                                       m_components(m_ecs.components){
     m_camera.offset = {0.f, 0.f};
     m_camera.target = {0.f, 0.f};
     m_camera.rotation = 0.f;
@@ -24,7 +22,15 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
     registerComponents();
 
     const float size = 10.f;
+    RenderTexture2D target = LoadRenderTexture(size, size);
+    BeginTextureMode(target);
+    ClearBackground(BLANK);
+    DrawRectangle(0.f, 0.f, size, size, WHITE);
+    EndTextureMode();
+    m_texture = target.texture;
+
     for(int i = 0; i < numEntities; ++i){
+        m_ecs.createEntity(EntityType::BLOB);
         float randX = (float)GetRandomValue(0, (gameOptions.SCREEN_WIDTH * COLUMNS) - size);
         float randY = (float)GetRandomValue(0, (gameOptions.SCREEN_HEIGHT * ROWS) - size);
         Vector2 pos = {randX, randY};
@@ -43,28 +49,34 @@ PlayState::~PlayState() {
 }
 
 void PlayState::handleInput() {
+    if(IsKeyPressed(KEY_SPACE)){
+        const int randomIndex = GetRandomValue(0, m_ecs.entityTypes.size() - 1);
+        m_ecs.removeEntity(randomIndex);
+    }
 }
 
 void PlayState::update(float dt) {
 
-   //t1.begin();
-        rebuildTileMapEntity();
-   //std::cout << "Rebuilding tileMap took " << t1.getDuration() << "ms\n";
+    if(m_tileMap.entities.size() != m_ecs.size){
+        m_tileMap.setEntitiesSize(numEntities);
+    }
 
-    //move Entities
+    // move Entities
     Component &positions = m_components[ComponentType::POSITION];
-    
-    for (int i = 0; i < numEntities; ++i) {
-        Vector2& vec = positions.get<Vector2>(i);
+    for (int i = 0; i < m_ecs.size; ++i) {
+        Vector2 &vec = positions.get<Vector2>(i);
         vec.x += 100.f * dt;
         m_tileMap.entities[i] = (static_cast<int>(vec.y) / m_tileMap.tileHeight) * COLUMNS + (static_cast<int>(vec.x) / m_tileMap.tileWidth) % (COLUMNS * ROWS);
     }
 
-    for(int i = 0; i < numEntities; ++i){
-        Vector2& vec = positions.get<Vector2>(i);
+    //t1.begin();
+    rebuildTileMapEntity();
+    //std::cout << "Rebuilding tileMap took " << t1.getDuration() << "ms\n";
 
+    for (int i = 0; i < m_ecs.size; ++i) {
+        Vector2& vec = positions.get<Vector2>(i);
         if(vec.x >= m_gameOptions.SCREEN_WIDTH * COLUMNS){
-            vec.x = 0.f;
+            vec.x = -12.f;
         }
     }
 }
@@ -76,7 +88,7 @@ void PlayState::rebuildTileMap() {
     m_tileMap.clear();
     Vector2 pos;
     Vector2 size;
-    for (int i = 0; i < numEntities; ++i) {
+    for (int i = 0; i < m_ecs.size; ++i) {
         pos = positions.get<Vector2>(i);
         size = sizes.get<Vector2>(i);
         m_tileMap.add(i,
@@ -95,12 +107,18 @@ void PlayState::render() const {
 
     const Component& positions = m_components[ComponentType::POSITION];
     const Component& sizes = m_components[ComponentType::SIZE];
+    
     Vector2 pos;
     Vector2 size;
-    for(int i = 0; i < numEntities; ++i){
+    Rectangle src = {0.f, 0.f, 10.f, 10.f};
+    Rectangle dst = {0.f, 0.f, 10.f, 10.f};
+    Vector2 origin = {0.f, 0.f};
+
+    for(int i = 0; i < m_ecs.size; ++i){
         pos = positions.get<Vector2>(i);
-        size = sizes.get<Vector2>(i);
-        DrawCircle(pos.x, pos.y, size.x, RED);
+        dst.x = pos.x;
+        dst.y = pos.y;
+        DrawTexturePro(m_texture, src, dst, origin, 0.f, RED);
     }
 
     EndMode2D();
@@ -118,9 +136,9 @@ void PlayState::drawUi() const {
     std::string fpsText = "Fps: " + std::to_string(GetFPS());
     DrawText(fpsText.c_str(), x, y, fontSize, RAYWHITE);
 
-    // y += yOffset;
-    // std::string totalEntitiesText = "Entities: " + std::to_string(m_entityManager.entities.size());
-    // DrawText(totalEntitiesText.c_str(), x, y, fontSize, RAYWHITE);
+    y += yOffset;
+    std::string totalEntitiesText = "Entities: " + std::to_string(m_ecs.size);
+    DrawText(totalEntitiesText.c_str(), x, y, fontSize, RAYWHITE);
     
     // y += yOffset;
     // std::string entitiesInRangeText = "Entities in range: " + std::to_string(m_entitiesInRange.size());

@@ -8,8 +8,8 @@
 
 #include "TileMap.h"
 
-#include "ComponentManager.h"
-#include "Component.h"
+#include "EcsManager.h"
+#include "Components.h"
 
 class PlayState : public GameState {
   public:
@@ -25,7 +25,11 @@ class PlayState : public GameState {
 
     TileMap m_tileMap;
 
-    Components m_components;
+    EcsManager m_ecs;
+    Components& m_components;
+
+    //tmp textures;
+    Texture2D m_texture;
 
   private:
     //init
