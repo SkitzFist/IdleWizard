@@ -1,17 +1,10 @@
-#ifndef IDLE_WIZARD_COMPONENT_MANAGER_H
-#define IDLE_WIZARD_COMPONENT_MANAGER_H
+#ifndef IDLE_WIZARD_COMPONENS_H
+#define IDLE_WIZARD_COMPONENS_H
 
 #include <unordered_map>
-#include <any>
 
+#include "ComponentType.h"
 #include "Component.h"
-
-enum class ComponentType {
-    POSITION,
-    SIZE,
-    TRANSFORM,
-    COUNT
-};
 
 struct Components {
     std::unordered_map<ComponentType, Component> components;

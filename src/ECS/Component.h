@@ -11,45 +11,37 @@
 
 class Component{
 public:
-  Component(const size_t dataTypeSize, const size_t initCapacity) : dataTypeSize(dataTypeSize), capacity(initCapacity), size(0){
-    std::cout << "Normal ctr\n";
-    try{
-      data = new std::byte[dataTypeSize * initCapacity];
-    } catch(...){
-      std::cerr << "Component bad_alloc\n";
-    }
-    
+  Component(const size_t dataTypeSize, const size_t initCapacity) : m_dataTypeSize(dataTypeSize), capacity(initCapacity), m_size(0){
+    m_data = new std::byte[dataTypeSize * initCapacity];
+    m_entityIds.reserve(initCapacity);
   }
 
   ~Component(){
-    delete[] data;
+    delete[] m_data;
   }
 
-  // Disable copy semantics to prevent accidental copying
+  // Disable copy semantics to prevent accidental copying, should maybe allow this for when world splitting
   Component(const Component &) = delete;
   Component &operator=(const Component &) = delete;
 
-  // Enable move semantics if needed
   Component(Component &&other) noexcept
-      : data(other.data), dataTypeSize(other.dataTypeSize), capacity(other.capacity), size(other.size) {
-        std::cout << "Move constructor\n";
-    other.data = nullptr;
-    other.size = 0;
+      : m_data(other.m_data), m_dataTypeSize(other.m_dataTypeSize), capacity(other.capacity), m_size(other.m_size) {
+    other.m_data = nullptr;
+    other.m_size = 0;
     other.capacity = 0;
   }
 
   Component &operator=(Component &&other) noexcept {
-    std::cout << "Move operator\n";
     if (this != &other) {
-        delete[] data;
+        delete[] m_data;
 
-        data = other.data;
-        dataTypeSize = other.dataTypeSize;
+        m_data = other.m_data;
+        m_dataTypeSize = other.m_dataTypeSize;
         capacity = other.capacity;
-        size = other.size;
+        m_size = other.m_size;
 
-        other.data = nullptr;
-        other.size = 0;
+        other.m_data = nullptr;
+        other.m_size = 0;
         other.capacity = 0;
     }
     return *this;
@@ -58,16 +50,16 @@ public:
   void resize(size_t newCapacity){
     capacity = newCapacity;
 
-    std::byte* tmp = new std::byte[dataTypeSize * capacity];
+    std::byte* tmp = new std::byte[m_dataTypeSize * capacity];
 
-    memcpy(tmp, data, dataTypeSize * size);
+    memcpy(tmp, m_data, m_dataTypeSize * m_size);
     
-    delete[] data;
-    data = tmp;
+    delete[] m_data;
+    m_data = tmp;
   }
 
   size_t getSize() const noexcept{
-    return size;
+    return m_size;
   }
 
   size_t getCapacity() const noexcept{
@@ -75,30 +67,132 @@ public:
   }
 
   void add(void* item){
-    if(size == capacity){
-      std::cout << "SHOULD RESIZE\n";
-      //resize();
+    if(m_size == capacity){
+      resize(capacity * 2);
     }
 
-    memcpy(&data[dataTypeSize * size], item, dataTypeSize);
-    ++size;
+    memcpy(&m_data[m_dataTypeSize * m_size], item, m_dataTypeSize);
+    ++m_size;
   }
 
   template<typename T>
   T& get(size_t index){
-    return reinterpret_cast<T&>(data[index * dataTypeSize]);
+    return reinterpret_cast<T&>(m_data[index * m_dataTypeSize]);
   }
 
   template <typename T>
   const T &get(size_t index) const {
-    return reinterpret_cast<const T &>(data[index * dataTypeSize]);
+    return reinterpret_cast<const T &>(m_data[index * m_dataTypeSize]);
+  }
+
+  int getIndex(int entityID){
+    int low = 0;
+    int high = m_entityIds.size() - 1;
+    int mid = 0;
+
+    while (low <= high) {
+      mid = low + (high - low) / 2;
+      if (m_entityIds[mid] == entityID) {
+          return mid;
+      }
+
+      if (m_entityIds[mid] < entityID) {
+          low = mid + 1;
+      } else {
+          high = mid - 1;
+      }
+    }
+
+    return -1;
+  }
+
+  /////////////////////////////////
+  ///       Deletion          ////
+  ///////////////////////////////
+
+  //both has component
+  void swapDataPopBack(const int entityId){
+    const int index = getIndex(entityId);
+    if(index == -1){
+      return;
+    }
+
+    // moves last data to index
+    memcpy(m_data + (index * m_dataTypeSize), m_data + (m_size * m_dataTypeSize), m_dataTypeSize);
+
+    --m_size;
+    m_entityIds.pop_back();
+  }
+
+  //Only A has Component
+  void swapDataAndIdPopBack(const int entityId){
+    int index = getIndex(entityId);
+    if(index == -1){
+      return;
+    }
+
+    //moves last data to index
+    memcpy(m_data + (index * m_dataTypeSize), m_data + (m_size * m_dataTypeSize), m_dataTypeSize);
+
+    //swap id
+    std::swap(m_entityIds[index], m_entityIds.back());
+
+    sortItem(index);
+  }
+
+  //only B has component
+  void switchId(const int from, const int to){
+    const int index = getIndex(from);
+
+    if(index == -1){
+      return;
+    }
+
+    m_entityIds[index] = to;
+    sortItem(index);
   }
 
 private:
-  std::byte* data;
-  size_t dataTypeSize;
+  std::byte* m_data;
+  std::vector<int> m_entityIds;
+  size_t m_dataTypeSize;
   size_t capacity;
-  size_t size;
+  size_t m_size;
+
+private:
+    ////////////////////////////////
+    ///    Moving / sorting     ///
+    //////////////////////////////
+    void swapData(const int indexA, const int indexB, void *tmp) {
+    std::size_t memPlaceA = m_dataTypeSize * indexA;
+    std::size_t memPlaceB = m_dataTypeSize * indexB;
+
+    memcpy(tmp, m_data + memPlaceA, m_dataTypeSize);
+    memcpy(m_data + memPlaceA, m_data + memPlaceB, m_dataTypeSize);
+    memcpy(m_data + memPlaceB, tmp, m_dataTypeSize);
+    }
+
+    void sortItem(const int index) {
+      int newIndex = index;
+
+      void* tmp = malloc(m_dataTypeSize);
+      
+      //move element up
+      while (newIndex > 0 && m_entityIds[newIndex] < m_entityIds[newIndex - 1]){
+        std::swap(m_entityIds[newIndex], m_entityIds[newIndex - 1]);
+        swapData(newIndex, newIndex - 1, tmp);
+        --newIndex;
+      }
+
+      //move element down
+      while (newIndex < m_size && m_entityIds[newIndex] > m_entityIds[newIndex + 1]) {
+        std::swap(m_entityIds[newIndex], m_entityIds[newIndex + 1]);
+        swapData(newIndex, newIndex + 1, tmp);
+        ++newIndex;
+      }
+
+      free(tmp);
+    }
 };
 
 #endif
