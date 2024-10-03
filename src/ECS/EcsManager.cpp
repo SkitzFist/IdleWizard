@@ -76,4 +76,5 @@ void EcsManager::addComponent(const int index, const ComponentType type) {
 
 void EcsManager::removeComponent(const int index, const ComponentType type){
   entityToComponents[index].erase(type);
+  components[type].swapDataAndIdPopBack(index);
 }
