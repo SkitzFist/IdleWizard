@@ -17,7 +17,7 @@ inline bool componentsRefTest(){
   components.registerComponent(ComponentType::POSITION, sizeof(int), num);
 
   for(int i = 0; i < num; ++i){
-    components[ComponentType::POSITION].add(&i);
+    components[ComponentType::POSITION].add(&i, i);
   }
 
   for (int i = 0; i < num; ++i) {
@@ -49,7 +49,7 @@ inline bool removeTestSingleEntitySingleComponent(){
   for (int i = 0; i < num; ++i) {
     ecs.createEntity(EntityType::BLOB);
     ecs.addComponent(i, ComponentType::POSITION);
-    components[ComponentType::POSITION].add(&i);
+    components[ComponentType::POSITION].add(&i, i);
   }
 
   constexpr const int numRemoves = 3;

@@ -6,6 +6,7 @@
 #include "ComponentType.h"
 #include "Component.h"
 
+//todo: swithc unordered_map to array as there is a finite number of components.
 struct Components {
     std::unordered_map<ComponentType, Component> components;
 

@@ -7,6 +7,7 @@
 #include "ComponentType.h"
 #include "Components.h"
 #include "EntityType.h"
+#include "Systems.h"
 
 class EcsManager{
 public:
@@ -15,17 +16,18 @@ public:
   int createEntity(const EntityType type);
   void removeEntity(const int entityId);
 
+  //components
   bool hasComponent(const int index, const ComponentType type) const;
   void addComponent(const int index, const ComponentType type);
   void removeComponent(const int index, const ComponentType type);
   
   std::vector<EntityType> entityTypes;
-  std::vector<ComponentSignature> entityToComponents; //todo switch to bitsets
+  std::vector<ComponentSignature> entityToComponents;
   Components components;
   int size;
 
-  private:
-
+  //systems
+  Systems systems;
 };
 
 #endif

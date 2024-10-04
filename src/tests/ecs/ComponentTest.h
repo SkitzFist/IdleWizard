@@ -11,7 +11,7 @@ bool resizeTest(){
 
   //fill
   for(int i = 0; i < c.getCapacity(); ++i){
-    c.add(&i);
+    c.add(&i, i);
   }
   
   try{
@@ -30,7 +30,7 @@ bool hugeCapTest(){
   try{
     Component c(sizeof(int), num);
     for (int i = 0; i < num; ++i) {
-        c.add(&i);
+        c.add(&i, i);
     }
   } catch (...){
     std::cerr << "Component failed huge cap: " << num << '\n';
@@ -46,7 +46,7 @@ bool hugeCapInComponentManager(){
   try {
     components.registerComponent(ComponentType::POSITION, sizeof(int), num);
     for (int i = 0; i < num; ++i) {
-        components[ComponentType::POSITION].add(&i);
+        components[ComponentType::POSITION].add(&i, i);
     }
   } catch (...) {
     std::cerr << "Component failed huge cap component manager: " << num << '\n';
