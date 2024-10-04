@@ -5,9 +5,6 @@
 #include <cstring>
 #include <vector>
 
-//debug
-#include <iostream>
-
 
 class Component{
 public:
@@ -47,6 +44,10 @@ public:
     return *this;
   }
 
+  int operator[](const int index){
+    return m_entityIds[index];
+  }
+
   void resize(size_t newCapacity){
     capacity = newCapacity;
 
@@ -66,12 +67,13 @@ public:
     return capacity;
   }
 
-  void add(void* item){
+  void add(void* item, int id){
     if(m_size == capacity){
       resize(capacity * 2);
     }
 
     memcpy(&m_data[m_dataTypeSize * m_size], item, m_dataTypeSize);
+    m_entityIds.emplace_back(id);
     ++m_size;
   }
 
@@ -135,6 +137,7 @@ public:
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         that would just overwrite the values, and keeping the entire thing sorted at the same time.
         using the sort function is some overhead as the value is swapped for each position.
+        look into if similar can be done to the entityID:S
     */
     int index = getIndex(entityId);
     if(index == -1){

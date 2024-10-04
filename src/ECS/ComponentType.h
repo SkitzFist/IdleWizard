@@ -6,7 +6,7 @@
 enum ComponentType {
     POSITION,
     SIZE,
-    TRANSFORM,
+    VELOCITY,
     COUNT
 };
 

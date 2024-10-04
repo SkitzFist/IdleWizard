@@ -10,6 +10,7 @@
 
 #include "EcsManager.h"
 #include "Components.h"
+#include "Systems.h"
 
 class PlayState : public GameState {
   public:
@@ -27,6 +28,7 @@ class PlayState : public GameState {
 
     EcsManager m_ecs;
     Components& m_components;
+    Systems& m_systems;
 
     //tmp textures;
     Texture2D m_texture;
@@ -34,6 +36,7 @@ class PlayState : public GameState {
   private:
     //init
     void registerComponents();
+    void registerSystems();
 
     //input
 
