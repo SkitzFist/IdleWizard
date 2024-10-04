@@ -1,5 +1,7 @@
 #include "EcsManager.h"
 
+#include <bitset>
+
 EcsManager::EcsManager() : size(0){
 
 }
@@ -38,27 +40,27 @@ void EcsManager::removeEntity(const int entityId){
 
 
     //2. loop through all components[X]
-    std::unordered_set<ComponentType> aAndBComponentTypes;
-    aAndBComponentTypes.insert(entityToComponents[aIndex].begin(), entityToComponents[aIndex].end());
-    aAndBComponentTypes.insert(entityToComponents[bIndex].begin(), entityToComponents[bIndex].end());
+    ComponentSignature aOrBComponentTypes = entityToComponents[aIndex] | entityToComponents[bIndex];
 
-    for(const ComponentType componentType : aAndBComponentTypes){
-      bool aHasComponent = hasComponent(aIndex, componentType);
-      bool bHasComponent = hasComponent(bIndex, componentType);
+    //TODO: _Find_first and _Find_next is GCC and will not work with emscripten
+    for (size_t i = aOrBComponentTypes._Find_first(); i < aOrBComponentTypes.size(); i = aOrBComponentTypes._Find_next(i)){
+        ComponentType type = (ComponentType) i;
+        bool aHasComponent = hasComponent(aIndex, type);
+        bool bHasComponent = hasComponent(bIndex, type);
 
-      if(aHasComponent && bHasComponent){
-          //2.1 swap data pop back <-- A and B has component[X]
-          components[componentType].swapDataPopBack(aIndex);
-      } else if(aHasComponent && !bHasComponent){
-          // 2.2 swap data & id pop back and sort element <-- only A has component [X]
-          components[componentType].swapDataAndIdPopBack(aIndex);
-      } else if (!aHasComponent && bHasComponent){
-          // 2.3 swithch id and sort element <-- only B has component [X]
-          components[componentType].switchId(aIndex, bIndex);
-      }
+        if(aHasComponent && bHasComponent){
+            //2.1 swap data pop back <-- A and B has component[X]
+            components[i].swapDataPopBack(aIndex);
+        } else if(aHasComponent && !bHasComponent){
+            // 2.2 swap data & id pop back and sort element <-- only A has component [X]
+            components[i].swapDataAndIdPopBack(aIndex);
+        } else if (!aHasComponent && bHasComponent){
+            // 2.3 swithch id and sort element <-- only B has component [X]
+            components[i].switchId(aIndex, bIndex);
+        }
     }
 
-    //3. remove from entityToComponents [X]
+    // 3. remove from entityToComponents [X]
     std::swap(entityToComponents[aIndex], entityToComponents[bIndex]);
     entityToComponents.pop_back();
 
@@ -66,14 +68,14 @@ void EcsManager::removeEntity(const int entityId){
 }
 
 bool EcsManager::hasComponent(const int index, const ComponentType type) const {
-  return entityToComponents[index].find(type) != entityToComponents[index].end();
+  return entityToComponents[index].test(type);
 }
 
 void EcsManager::addComponent(const int index, const ComponentType type) {
-  entityToComponents[index].emplace(type);
+  entityToComponents[index].set(type);
 }
 
 void EcsManager::removeComponent(const int index, const ComponentType type){
-  entityToComponents[index].erase(type);
+  entityToComponents[index].reset(type);
   components[type].swapDataAndIdPopBack(index);
 }
