@@ -7,8 +7,7 @@ EcsManager::EcsManager() : size(0){
 int EcsManager::createEntity(const EntityType type){
   entityTypes.emplace_back(type);
   entityToComponents.emplace_back();
-  ++size;
-  return size;
+  return size++;
 }
 
 void EcsManager::removeEntity(const int entityId){
