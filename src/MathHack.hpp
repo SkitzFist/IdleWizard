@@ -12,7 +12,7 @@ inline constexpr const T &clamp(T &x, const T &min, const T &max) {
 }
 
 template <class T>
-inline constexpr const T min(const T &a, const T &b) {
+inline constexpr const T& min(const T &a, const T &b) {
     return a > b ? b : a;
 }
 
