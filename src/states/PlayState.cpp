@@ -8,7 +8,7 @@
 inline Timer t1;
 inline Timer t2;
 
-inline int numEntities = 100000;
+inline int numEntities = 100;
 
 PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
                                                        m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
@@ -53,6 +53,14 @@ void PlayState::handleInput() {
         const int randomIndex = GetRandomValue(0, m_ecs.entityTypes.size() - 1);
         m_ecs.removeEntity(randomIndex);
     }
+
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        m_ecs.createEntity(EntityType::BLOB);
+        Vector2 pos = GetScreenToWorld2D(GetMousePosition(), m_camera);
+        m_components[ComponentType::POSITION].add(&pos);
+        Vector2 s = {10.f, 10.f};
+        m_components[ComponentType::SIZE].add(&s);
+    }
 }
 
 void PlayState::update(float dt) {
@@ -65,7 +73,7 @@ void PlayState::update(float dt) {
     Component &positions = m_components[ComponentType::POSITION];
     for (int i = 0; i < m_ecs.size; ++i) {
         Vector2 &vec = positions.get<Vector2>(i);
-        vec.x += 100.f * dt;
+        //vec.x += 100.f * dt;
         m_tileMap.entities[i] = (static_cast<int>(vec.y) / m_tileMap.tileHeight) * COLUMNS + (static_cast<int>(vec.x) / m_tileMap.tileWidth) % (COLUMNS * ROWS);
     }
 
@@ -116,8 +124,11 @@ void PlayState::render() const {
 
     for(int i = 0; i < m_ecs.size; ++i){
         pos = positions.get<Vector2>(i);
+        size = sizes.get<Vector2>(i);
         dst.x = pos.x;
         dst.y = pos.y;
+        dst.width = size.x;
+        dst.height = size.y;
         DrawTexturePro(m_texture, src, dst, origin, 0.f, RED);
     }
 

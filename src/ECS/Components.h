@@ -30,6 +30,24 @@ struct Components {
             throw std::runtime_error("Component not registered");
         }
     }
+
+    Component &operator[](const size_t index) {
+        auto it = components.find((ComponentType) index);
+        if (it != components.end()) {
+            return it->second;
+        } else {
+            throw std::runtime_error("Component not registered");
+        }
+    }
+
+    const Component &operator[](const size_t index) const {
+        auto it = components.find((ComponentType)index);
+        if (it != components.end()) {
+            return it->second;
+        } else {
+            throw std::runtime_error("Component not registered");
+        }
+    }
 };
 
 #endif

@@ -20,7 +20,7 @@ public:
   void removeComponent(const int index, const ComponentType type);
   
   std::vector<EntityType> entityTypes;
-  std::vector<std::unordered_set<ComponentType>> entityToComponents; //todo switch to bitsets
+  std::vector<ComponentSignature> entityToComponents; //todo switch to bitsets
   Components components;
   int size;
 
