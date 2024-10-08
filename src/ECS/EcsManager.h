@@ -3,11 +3,14 @@
 
 #include <unordered_set>
 #include <vector>
+#include <array>
 
 #include "ComponentType.h"
 #include "Components.h"
 #include "EntityType.h"
+#include "EntityTypeMap.h"
 #include "Systems.h"
+#include "TextureData.h"
 
 class EcsManager{
 public:
@@ -18,16 +21,22 @@ public:
 
   //components
   bool hasComponent(const int index, const ComponentType type) const;
-  void addComponent(const int index, const ComponentType type);
+  void addComponent(const int index, const ComponentType type, void* data);
   void removeComponent(const int index, const ComponentType type);
   
   std::vector<EntityType> entityTypes;
+  EntityTypeMap entityTypeMap;
   std::vector<ComponentSignature> entityToComponents;
   Components components;
-  int size;
 
   //systems
   Systems systems;
+
+  //textures
+  TextureData textures;
+  
+  //general
+  int size;
 };
 
 #endif

@@ -9,6 +9,7 @@ EcsManager::EcsManager() : size(0){
 int EcsManager::createEntity(const EntityType type){
   entityTypes.emplace_back(type);
   entityToComponents.emplace_back();
+  entityTypeMap[type].emplace_back(size);
   return size++;
 }
 
@@ -19,24 +20,27 @@ void EcsManager::removeEntity(const int entityId){
   }
 
   /*
-    1. remove entityType [X]
+    1. remove entityType & typeMap [X]
     2. loop through all components [X]
       2.1 swap data pop back <-- A and B has component [X]
       2.2 swap data & id pop back and sort element <-- only A has component [X]
       2.3 swithch id and sort element <-- only B has component [X]
     3. remove from entityToComponents [X]
-    4. remove from spatial? []
   */
 
-    //1. remove entityType [X]
+    //1. remove entityType & update typeMap [X]
     const int aIndex = entityId;
     const int bIndex = entityTypes.size() - 1;
     EntityType a = entityTypes[aIndex];
     EntityType b = entityTypes[bIndex];
+
     if(a != b){
       std::swap(entityTypes[entityId], entityTypes[bIndex]);
+      entityTypeMap.switchId(b, bIndex, aIndex);
     }
+
     entityTypes.pop_back();
+    entityTypeMap.remove(a, aIndex);
 
 
     //2. loop through all components[X]
@@ -71,7 +75,8 @@ bool EcsManager::hasComponent(const int index, const ComponentType type) const {
   return entityToComponents[index].test(type);
 }
 
-void EcsManager::addComponent(const int index, const ComponentType type) {
+void EcsManager::addComponent(const int index, const ComponentType type, void* data) {
+  components[type].add(data, index);
   entityToComponents[index].set(type);
 }
 
