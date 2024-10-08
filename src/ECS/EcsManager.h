@@ -10,7 +10,6 @@
 #include "EntityType.h"
 #include "EntityTypeMap.h"
 #include "Systems.h"
-#include "TextureData.h"
 
 class EcsManager{
 public:
@@ -31,9 +30,6 @@ public:
 
   //systems
   Systems systems;
-
-  //textures
-  TextureData textures;
   
   //general
   int size;

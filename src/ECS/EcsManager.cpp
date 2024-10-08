@@ -2,6 +2,8 @@
 
 #include <bitset>
 
+#include <iostream>
+
 EcsManager::EcsManager() : size(0){
 
 }
@@ -15,7 +17,9 @@ int EcsManager::createEntity(const EntityType type){
 
 void EcsManager::removeEntity(const int entityId){
 
-  if(entityId >= entityTypes.size()){
+  std::cout << "Size: " << size << "   id: " << entityId << '\n';
+  if(entityId >= size){
+    std::cout << "returning\n";
     return;
   }
 
@@ -34,14 +38,14 @@ void EcsManager::removeEntity(const int entityId){
     EntityType a = entityTypes[aIndex];
     EntityType b = entityTypes[bIndex];
 
-    if(a != b){
+    if(a != b && size > 1){
       std::swap(entityTypes[entityId], entityTypes[bIndex]);
       entityTypeMap.switchId(b, bIndex, aIndex);
     }
 
     entityTypes.pop_back();
     entityTypeMap.remove(a, aIndex);
-
+  
 
     //2. loop through all components[X]
     ComponentSignature aOrBComponentTypes = entityToComponents[aIndex] | entityToComponents[bIndex];
@@ -69,6 +73,7 @@ void EcsManager::removeEntity(const int entityId){
     entityToComponents.pop_back();
 
     --size;
+    std::cout << "Removal complete, new size: " << size << "\n\n";
 }
 
 bool EcsManager::hasComponent(const int index, const ComponentType type) const {

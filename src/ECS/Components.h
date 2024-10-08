@@ -1,6 +1,7 @@
 #ifndef IDLE_WIZARD_COMPONENS_H
 #define IDLE_WIZARD_COMPONENS_H
 
+#include <stdexcept>
 #include <unordered_map>
 
 #include "ComponentType.h"

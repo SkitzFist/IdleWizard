@@ -6,6 +6,7 @@ void EntityTypeMap::remove(const EntityType type, const int id){
   std::vector<int>& vec = typeMap[(int)type];
   int index = getIndex(vec, id);
   memcpy(vec.data() + index, vec.data() + index + 1, (vec.size() - index - 1) * sizeof(int));
+  vec.pop_back();
 }
 
 void EntityTypeMap::switchId(const EntityType type, const int from, const int to){

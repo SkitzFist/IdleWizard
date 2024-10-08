@@ -48,8 +48,7 @@ inline bool removeTestSingleEntitySingleComponent(){
 
   for (int i = 0; i < num; ++i) {
     ecs.createEntity(EntityType::BLOB);
-    ecs.addComponent(i, ComponentType::POSITION);
-    components[ComponentType::POSITION].add(&i, i);
+    ecs.addComponent(i, ComponentType::POSITION, &i);
   }
 
   constexpr const int numRemoves = 3;
@@ -99,7 +98,7 @@ inline bool componentTypeTest(){
   EcsManager ecs;
   for(int i = 0; i < num; ++i){
     ecs.createEntity(EntityType::BLOB);
-    ecs.addComponent(i, ComponentType::POSITION);
+    ecs.addComponent(i, ComponentType::POSITION, &i);
   }
 
   for(int i = 0; i < num; ++i){

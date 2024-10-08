@@ -87,7 +87,19 @@ public:
     return reinterpret_cast<const T &>(m_data[index * m_dataTypeSize]);
   }
 
-  int getIndex(int entityID){
+  template <typename T>
+  T &getFromId(size_t id) {
+    int index = getIndex(id);
+    return reinterpret_cast<T &>(m_data[index * m_dataTypeSize]);
+  }
+
+  template <typename T>
+  const T &getFromId(size_t id) const {
+    int index = getIndex(id);
+    return reinterpret_cast<const T &>(m_data[index * m_dataTypeSize]);
+  }
+
+  int getIndex(int entityID) const {
     int low = 0;
     int high = m_entityIds.size() - 1;
     int mid = 0;
