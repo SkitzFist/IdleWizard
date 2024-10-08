@@ -4,7 +4,8 @@
 enum class EntityType {
     BLOB,
     WIZARD,
-    MANA_SHRINE
+    MANA_ALTAR,
+    COUNT
 };
 
 #endif

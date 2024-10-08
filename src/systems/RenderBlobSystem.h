@@ -8,6 +8,7 @@
 #include "EntityType.h"
 #include "System.h"
 #include "Component.h"
+#include "EntityTypeMap.h"
 
 /*
   Note: this was for testing purposes.
@@ -18,19 +19,24 @@
 
 class RenderBlobSystem : public RenderSystem{
 public:
-  RenderBlobSystem(std::vector<EntityType>& entityTypes, Component& positions, Component& sizes);
+  RenderBlobSystem(std::vector<int> &blobIds, Component &positions, Component &sizes, EntityTypeMap& typeMap);
 
   virtual void run() const override;
 private:
-  std::vector<EntityType>& m_entityTypes;
   Component& m_positions;
   Component& m_sizes;
+  std::vector<int>& m_blobIds;
+  EntityTypeMap& m_typeMap;
   Texture2D m_blobTexture;
 };
 
-RenderBlobSystem::RenderBlobSystem(std::vector<EntityType> &entityTypes, Component &positions, Component &sizes) : m_entityTypes(entityTypes),
-                                                                                                                   m_positions(positions),
-                                                                                                                   m_sizes(sizes) {
+RenderBlobSystem::RenderBlobSystem(std::vector<int> &blobIds,
+                                   Component &positions,
+                                   Component &sizes,
+                                   EntityTypeMap &typeMap) : m_blobIds(blobIds),
+                                                             m_positions(positions),
+                                                             m_sizes(sizes),
+                                                             m_typeMap(typeMap) {
   const float size = 10.f;
   RenderTexture2D target = LoadRenderTexture(size, size);
   BeginTextureMode(target);
@@ -44,16 +50,14 @@ void RenderBlobSystem::run() const {
   Rectangle src = {0.f, 0.f, 10.f, 10.f};
   Rectangle dst = {0.f,0.f,0.f,0.f};
   Vector2 origin = {0.f, 0.f};
-  for(int i = 0; i < m_entityTypes.size(); ++i){
-    if(m_entityTypes[i] == EntityType::BLOB){
-            const Vector2& pos = m_positions.get<Vector2>(i);
-            const Vector2& size = m_sizes.get<Vector2>(i);
-            dst.x = pos.x;
-            dst.y = pos.y;
-            dst.width = size.x;
-            dst.height = size.y;
-            DrawTexturePro(m_blobTexture, src, dst, origin, 0.f, RED);
-    }
+  for(const int id : m_blobIds){
+      const Vector2 &pos = m_positions.getFromId<Vector2>(id);
+      const Vector2 &size = m_sizes.getFromId<Vector2>(id);
+      dst.x = pos.x;
+      dst.y = pos.y;
+      dst.width = size.x;
+      dst.height = size.y;
+      DrawTexturePro(m_blobTexture, src, dst, origin, 0.f, RED);
   }
 }
 

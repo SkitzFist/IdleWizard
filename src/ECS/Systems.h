@@ -18,12 +18,14 @@ struct Systems{
     void registerUpdateSystem(UpdateSystemType type, Args&&... args){
         static_assert(std::is_base_of<UpdateSystem, T>::value, "T must derive from UpdateSystem");
         updateSystems[(int)type] = std::make_unique<T>(std::forward<Args>(args)...);
+        enableUpdateSystem(type);
     }
 
     template <typename T, typename... Args>
     void registerRenderSystem(RenderSystemType type, Args &&...args) {
         static_assert(std::is_base_of<RenderSystem, T>::value, "T must derive from RenderSystem");
         renderSystems[(int)type] = std::make_unique<T>(std::forward<Args>(args)...);
+        enableRenderSystem(type);
     }
 
     void enableUpdateSystem(UpdateSystemType type){

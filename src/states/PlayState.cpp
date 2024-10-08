@@ -10,11 +10,14 @@
 
 //render systems
 #include "RenderBlobSystem.h"
+#include "RenderManaAltar.h"
+
+#include "ManaAltar.h"
 
 inline Timer t1;
 inline Timer t2;
 
-inline int numEntities = 100000;
+inline int numEntities = 10;
 
 PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
                                                        m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
@@ -28,10 +31,8 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
 
     registerComponents();
     registerSystems();
-    m_ecs.systems.enableRenderSystem(RenderSystemType::BLOB);
-    m_ecs.systems.enableUpdateSystem(UpdateSystemType::VELOCITY_MOVE);
 
-    for(int i = 0; i < numEntities; ++i){
+    for(int i = 0; i < numEntities - 1; ++i){
         m_ecs.createEntity(EntityType::BLOB);
         float randX = (float)GetRandomValue(0, (gameOptions.SCREEN_WIDTH * COLUMNS) - 10.f);
         float randY = (float)GetRandomValue(0, (gameOptions.SCREEN_HEIGHT * ROWS) - 10.f);
@@ -44,12 +45,15 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
         Vector2 s = {10.f, 10.f};
         m_components[ComponentType::SIZE].add(&s, i);
     }
+
+    //createManaAltar(m_ecs, m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT);
 }
 
 void PlayState::registerComponents(){
     m_components.registerComponent(ComponentType::POSITION, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::VELOCITY, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::SIZE, sizeof(Vector2), numEntities);
+    m_components.registerComponent(ComponentType::COLOR, sizeof(Color), numEntities);
 }
 
 void PlayState::registerSystems(){
@@ -62,9 +66,16 @@ void PlayState::registerSystems(){
 
     //render
     m_systems.registerRenderSystem<RenderBlobSystem>(RenderSystemType::BLOB,
-                                                     m_ecs.entityTypes,
+                                                     m_ecs.entityTypeMap[EntityType::BLOB],
                                                      m_components[ComponentType::POSITION],
-                                                     m_components[ComponentType::SIZE]);
+                                                     m_components[ComponentType::SIZE],
+                                                     m_ecs.entityTypeMap);
+    
+    m_systems.registerRenderSystem<RenderManaAltar>(RenderSystemType::MANA_ALTAR,
+                                                    m_components[ComponentType::POSITION],
+                                                    m_components[ComponentType::SIZE],
+                                                    m_components[ComponentType::COLOR],
+                                                    m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
 
 
 }
@@ -73,7 +84,7 @@ PlayState::~PlayState() {
 }
 
 void PlayState::handleInput() {
-    if(IsKeyPressed(KEY_SPACE)){
+    if(IsKeyPressed(KEY_SPACE) && m_ecs.size > 0){
         const int randomIndex = GetRandomValue(0, m_ecs.entityTypes.size() - 1);
         m_ecs.removeEntity(randomIndex);
     }

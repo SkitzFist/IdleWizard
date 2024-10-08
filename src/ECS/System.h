@@ -13,6 +13,7 @@ enum class UpdateSystemType{
 
 enum class RenderSystemType{
   BLOB,
+  MANA_ALTAR,
   COUNT
 };
 
