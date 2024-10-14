@@ -80,7 +80,7 @@ void Game::update() {
 
 void Game::render() const {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(DARKGRAY);
     m_currentState->render();
     EndDrawing();
 }

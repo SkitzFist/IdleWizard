@@ -12,7 +12,11 @@
 #include "RenderBlobSystem.h"
 #include "RenderManaAltar.h"
 
+//entity factories
 #include "ManaAltar.h"
+
+//data
+#include "Vector2i.h"
 
 inline Timer t1;
 inline Timer t2;
@@ -46,7 +50,7 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
         m_components[ComponentType::SIZE].add(&s, i);
     }
 
-    //createManaAltar(m_ecs, m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT);
+    createManaAltar(m_ecs, m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT);
 }
 
 void PlayState::registerComponents(){
@@ -54,6 +58,7 @@ void PlayState::registerComponents(){
     m_components.registerComponent(ComponentType::VELOCITY, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::SIZE, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::COLOR, sizeof(Color), numEntities);
+    m_components.registerComponent(ComponentType::RESOURCE, sizeof(Vector2i), numEntities);
 }
 
 void PlayState::registerSystems(){
@@ -75,6 +80,7 @@ void PlayState::registerSystems(){
                                                     m_components[ComponentType::POSITION],
                                                     m_components[ComponentType::SIZE],
                                                     m_components[ComponentType::COLOR],
+                                                    m_components[ComponentType::RESOURCE],
                                                     m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
 
 
@@ -102,6 +108,18 @@ void PlayState::update(float dt) {
 
     if(m_tileMap.entities.size() != m_ecs.size){
         m_tileMap.setEntitiesSize(numEntities);
+    }
+    
+    if(t1.getDuration() > 500.0){
+        for (int i = 0; i < m_components[ComponentType::RESOURCE].getSize(); ++i) {
+            Vector2i &resource = m_components[ComponentType::RESOURCE].get<Vector2i>(i);
+            resource.x += 1;
+
+            if(resource.x > resource.y){
+                resource.x = 0;
+            }
+        }
+        t1.begin();
     }
 
     m_systems.runUpdateSystems(dt);
