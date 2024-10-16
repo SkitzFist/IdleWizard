@@ -9,6 +9,7 @@
 struct EntityTypeMap{
   std::array<std::vector<int>, (int)EntityType::COUNT> typeMap;
 
+  void add(const EntityType type, const int id);
   void remove(const EntityType type, const int id);
   void switchId(const EntityType type, const int from, const int to);
 

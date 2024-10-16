@@ -67,6 +67,8 @@ void RenderManaAltar::run() const {
     Vector2 textSize;
     Vector2 textPos;
 
+    //std::cout << "Size: " << manaAltarIds.size() << '\n';
+    
     for (const int id : manaAltarIds) {
         Vector2 &pos = positions.getFromId<Vector2>(id);
         Vector2 &size = sizes.getFromId<Vector2>(id);

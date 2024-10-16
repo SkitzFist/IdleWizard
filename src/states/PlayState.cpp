@@ -41,13 +41,13 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
         float randX = (float)GetRandomValue(0, (gameOptions.SCREEN_WIDTH * COLUMNS) - 10.f);
         float randY = (float)GetRandomValue(0, (gameOptions.SCREEN_HEIGHT * ROWS) - 10.f);
         Vector2 pos = {randX, randY};
-        m_components[ComponentType::POSITION].add(&pos, i);
+        m_ecs.addComponent(i, ComponentType::POSITION, &pos);
         
         Vector2 vel = {100.f, 0.f};
-        m_components[ComponentType::VELOCITY].add(&vel, i);
+        m_ecs.addComponent(i, ComponentType::VELOCITY, &vel);
 
         Vector2 s = {10.f, 10.f};
-        m_components[ComponentType::SIZE].add(&s, i);
+        m_ecs.addComponent(i, ComponentType::SIZE, &s);
     }
 
     createManaAltar(m_ecs, m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT);
@@ -92,6 +92,7 @@ PlayState::~PlayState() {
 void PlayState::handleInput() {
     if(IsKeyPressed(KEY_SPACE) && m_ecs.size > 0){
         const int randomIndex = GetRandomValue(0, m_ecs.entityTypes.size() - 1);
+        std::cout << "\n Removing id: " << randomIndex << "\n";
         m_ecs.removeEntity(randomIndex);
     }
 

@@ -26,4 +26,7 @@ void createManaAltar(EcsManager &ecs, int worldWidth, int worldHeight){
 
   Vector2i resource = {0, 100};
   ecs.addComponent(entityId, ComponentType::RESOURCE, &resource);
+
+  Vector2 velocity = {150.f, 0.f};
+  ecs.addComponent(entityId, ComponentType::VELOCITY, &velocity);
 }
