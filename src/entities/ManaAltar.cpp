@@ -14,8 +14,8 @@ void createManaAltar(EcsManager &ecs, int worldWidth, int worldHeight) {
     ecs.addComponent(entityId, ComponentType::SIZE, &size);
 
     Vector2 pos = {
-        (float)GetRandomValue(0, worldWidth),
-        (float)GetRandomValue(0, worldHeight)};
+        (float)GetRandomValue(0, worldWidth - MANA_ALTAR_WIDTH),
+        (float)GetRandomValue(0, worldHeight - MANA_ALTAR_HEIGHT)};
     ecs.addComponent(entityId, ComponentType::POSITION, &pos);
 
     Color color = {

@@ -21,7 +21,7 @@ class RenderManaAltar : public RenderSystem {
                     std::vector<int> &manaAltarIds);
     ~RenderManaAltar();
 
-    virtual void run() const override;
+    virtual void render() const override;
 
   private:
     Component &positions;
@@ -50,7 +50,7 @@ RenderManaAltar::~RenderManaAltar() {
     UnloadTexture(manaAltarTexture);
 }
 
-void RenderManaAltar::run() const {
+void RenderManaAltar::render() const {
     const float textureSize = 64.f;
     const float scale = 2.f;
     float srcHeight = 0.f;

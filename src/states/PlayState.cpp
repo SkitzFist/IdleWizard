@@ -27,7 +27,9 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
                                                        m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
                                                        m_ecs(),
                                                        m_components(m_ecs.components),
-                                                       m_systems(m_ecs.systems) {
+                                                       m_systems(m_ecs.systems),
+                                                       m_debugHighlight(m_ecs, m_camera),
+                                                       m_debugEntityTypeMap(m_ecs) {
     m_camera.offset = {0.f, 0.f};
     m_camera.target = {0.f, 0.f};
     m_camera.rotation = 0.f;
@@ -89,14 +91,27 @@ void PlayState::registerSystems() {
 PlayState::~PlayState() {
 }
 
+bool shouldFreeze = false;
+
 void PlayState::handleInput() {
     if (IsKeyPressed(KEY_SPACE) && m_ecs.size > 0) {
         const int randomIndex = GetRandomValue(0, m_ecs.entityTypes.size() - 1);
         m_ecs.removeEntity(randomIndex);
     }
+
+    if (IsKeyPressed(KEY_LEFT_CONTROL)) {
+        shouldFreeze = !shouldFreeze;
+    }
 }
 
 void PlayState::update(float dt) {
+
+    m_debugHighlight.update(dt);
+    m_debugEntityTypeMap.update(dt);
+
+    if (shouldFreeze) {
+        return;
+    }
 
     if (m_tileMap.entities.size() != m_ecs.size) {
         m_tileMap.setEntitiesSize(numEntities);
@@ -146,6 +161,8 @@ void PlayState::render() const {
     EndMode2D();
 
     drawUi();
+    m_debugHighlight.render();
+    m_debugEntityTypeMap.render();
 }
 
 void PlayState::drawUi() const {
@@ -157,12 +174,4 @@ void PlayState::drawUi() const {
 
     std::string fpsText = "Fps: " + std::to_string(GetFPS());
     DrawText(fpsText.c_str(), x, y, fontSize, RAYWHITE);
-
-    y += yOffset;
-    std::string totalEntitiesText = "Entities: " + std::to_string(m_ecs.size);
-    DrawText(totalEntitiesText.c_str(), x, y, fontSize, RAYWHITE);
-
-    // y += yOffset;
-    // std::string entitiesInRangeText = "Entities in range: " + std::to_string(m_entitiesInRange.size());
-    // DrawText(entitiesInRangeText.c_str(), x, y, fontSize, RAYWHITE);
 }
