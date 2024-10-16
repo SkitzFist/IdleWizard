@@ -33,14 +33,15 @@ void EcsManager::removeEntity(const int entityId) {
     EntityType a = entityTypes[aIndex];
     EntityType b = entityTypes[bIndex];
 
-    if (a != b && size > 1) {
+    if (a == b) {
+        entityTypeMap.remove(a, bIndex);
+    } else {
         std::swap(entityTypes[entityId], entityTypes[bIndex]);
         entityTypeMap.switchId(b, bIndex, aIndex);
+        entityTypeMap.remove(a, aIndex);
     }
 
     entityTypes.pop_back();
-    entityTypeMap.remove(a, aIndex);
-    entityTypeMap.switchId(a, bIndex, aIndex);
 
     // 2. loop through all components[X]
     ComponentSignature aOrBComponentTypes = entityToComponents[aIndex] | entityToComponents[bIndex];
