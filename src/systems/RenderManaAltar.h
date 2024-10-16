@@ -46,8 +46,8 @@ RenderManaAltar::RenderManaAltar(Component &positions,
     manaAltarTexture = LoadTexture("assets/mana_altar_sh.png");
 }
 
-RenderManaAltar::~RenderManaAltar(){
-  UnloadTexture(manaAltarTexture);
+RenderManaAltar::~RenderManaAltar() {
+    UnloadTexture(manaAltarTexture);
 }
 
 void RenderManaAltar::run() const {
@@ -67,8 +67,8 @@ void RenderManaAltar::run() const {
     Vector2 textSize;
     Vector2 textPos;
 
-    //std::cout << "Size: " << manaAltarIds.size() << '\n';
-    
+    // std::cout << "Size: " << manaAltarIds.size() << '\n';
+
     for (const int id : manaAltarIds) {
         Vector2 &pos = positions.getFromId<Vector2>(id);
         Vector2 &size = sizes.getFromId<Vector2>(id);
@@ -76,6 +76,7 @@ void RenderManaAltar::run() const {
         Vector2i &resource = resources.getFromId<Vector2i>(id);
 
         // draw base
+        src = {0.f, 0.f, textureSize, textureSize};
         dst = {pos.x, pos.y, size.x, size.y};
         DrawTexturePro(manaAltarTexture, src, dst, origin, 0.f, WHITE);
 

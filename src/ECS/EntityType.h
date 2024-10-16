@@ -7,13 +7,11 @@ enum class EntityType {
     BLOB,
     WIZARD,
     MANA_ALTAR,
-    COUNT    
+    COUNT
 };
 
-
-inline const std::string toString(const EntityType type){
-    switch (type)
-    {
+inline const std::string toString(const EntityType type) {
+    switch (type) {
     case EntityType::BLOB:
         return "Blob";
     case EntityType::WIZARD:
@@ -25,3 +23,4 @@ inline const std::string toString(const EntityType type){
     }
 }
 #endif
+    

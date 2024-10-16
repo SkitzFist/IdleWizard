@@ -2,9 +2,6 @@
 
 #include <bitset>
 
-// debug
-#include <iostream>
-
 EcsManager::EcsManager() : size(0) {
 }
 
@@ -17,7 +14,7 @@ int EcsManager::createEntity(const EntityType type) {
 
 void EcsManager::removeEntity(const int entityId) {
 
-    if (entityId >= size) {
+    if (entityId >= size || entityId < 0) {
         return;
     }
 
@@ -43,25 +40,30 @@ void EcsManager::removeEntity(const int entityId) {
 
     entityTypes.pop_back();
     entityTypeMap.remove(a, aIndex);
+    entityTypeMap.switchId(a, bIndex, aIndex);
 
     // 2. loop through all components[X]
     ComponentSignature aOrBComponentTypes = entityToComponents[aIndex] | entityToComponents[bIndex];
 
     // TODO: _Find_first and _Find_next is GCC and will not work with emscripten
     for (size_t i = aOrBComponentTypes._Find_first(); i < aOrBComponentTypes.size(); i = aOrBComponentTypes._Find_next(i)) {
+
         ComponentType type = (ComponentType)i;
         bool aHasComponent = hasComponent(aIndex, type);
         bool bHasComponent = hasComponent(bIndex, type);
+        Component &component = components[i];
 
         if (aHasComponent && bHasComponent) {
             // 2.1 swap data pop back <-- A and B has component[X]
             components[i].swapDataPopBack(aIndex);
+
         } else if (aHasComponent && !bHasComponent) {
             // 2.2 swap data & id pop back and sort element <-- only A has component [X]
             components[i].swapDataAndIdPopBack(aIndex);
+
         } else if (!aHasComponent && bHasComponent) {
             // 2.3 swithch id and sort element <-- only B has component [X]
-            components[i].switchId(aIndex, bIndex);
+            components[i].switchId(bIndex, aIndex);
         }
     }
 
@@ -70,8 +72,6 @@ void EcsManager::removeEntity(const int entityId) {
     entityToComponents.pop_back();
 
     --size;
-
-    std::cout << "Removal Complete\n";
 }
 
 bool EcsManager::hasComponent(const int index, const ComponentType type) const {
