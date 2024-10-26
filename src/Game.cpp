@@ -13,7 +13,7 @@ inline constexpr const Game::State initState = Game::State::PLAY_STATE;
 
 Game::Game(const GameOptions &gameOptions) : m_gameOptions(gameOptions) {
     SetTraceLogLevel(LOG_NONE);
-    InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Miner");
+    InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Wizard");
 
     switchState(initState);
 }
@@ -80,7 +80,7 @@ void Game::update() {
 
 void Game::render() const {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(DARKGRAY);
     m_currentState->render();
     EndDrawing();
 }

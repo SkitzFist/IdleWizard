@@ -8,9 +8,13 @@
 
 #include "TileMap.h"
 
-#include "EcsManager.h"
 #include "Components.h"
+#include "EcsManager.h"
 #include "Systems.h"
+
+// debug
+#include "DebugEntityTypeMap.h"
+#include "DebugHighlightEntitySystem.h"
 
 class PlayState : public GameState {
   public:
@@ -27,24 +31,28 @@ class PlayState : public GameState {
     TileMap m_tileMap;
 
     EcsManager m_ecs;
-    Components& m_components;
-    Systems& m_systems;
+    Components &m_components;
+    Systems &m_systems;
 
-    //tmp textures;
+    // tmp textures;
     Texture2D m_texture;
 
+    // debug
+    DebugHighlightEntitySystem m_debugHighlight;
+    DebugEntityTypeMap m_debugEntityTypeMap;
+
   private:
-    //init
+    // init
     void registerComponents();
     void registerSystems();
 
-    //input
+    // input
 
-    //update
+    // update
     void rebuildTileMap();
     void rebuildTileMapEntity();
 
-    //render
+    // render
     void drawUi() const;
 };
 
