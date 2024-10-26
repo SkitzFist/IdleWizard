@@ -69,22 +69,20 @@ else()
   endif()
 endif()
 
-# Add command to copy assets folder to the build folder
-set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/assets")
-set(DEST_DIR "${CMAKE_BINARY_DIR}/assets")
+# Define the source and destination directories
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/Assets")
+set(DEST_DIR "${CMAKE_BINARY_DIR}/Assets")
 
+# Command to copy the assets directory to the build folder after the project is built
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${SOURCE_DIR}
-    ${DEST_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${SOURCE_DIR}" "${DEST_DIR}"
     COMMENT "Copying assets directory to the build folder"
 )
 
+# Custom target to manually copy the assets directory when building the project
 add_custom_target(copy_assets ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${SOURCE_DIR}
-    ${DEST_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${SOURCE_DIR}" "${DEST_DIR}"
     COMMENT "Manually copying assets directory to the build folder"
 )
 

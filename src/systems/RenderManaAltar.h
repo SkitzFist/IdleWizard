@@ -43,7 +43,7 @@ RenderManaAltar::RenderManaAltar(Component &positions,
                                                                    manaAltarIds(manaAltarIds) {
     RenderTexture2D target = LoadRenderTexture(MANA_ALTAR_WIDTH, MANA_ALTAR_HEIGHT);
     const float thickness = 1.f;
-    manaAltarTexture = LoadTexture("assets/mana_altar_sh.png");
+    manaAltarTexture = LoadTexture("Assets/mana_altar_sh.png");
 }
 
 RenderManaAltar::~RenderManaAltar() {
