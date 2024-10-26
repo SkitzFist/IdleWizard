@@ -17,6 +17,7 @@
 
 // data
 #include "Vector2i.h"
+#include "Resource.h"
 
 inline Timer t1;
 inline Timer t2;
@@ -62,7 +63,7 @@ void PlayState::registerComponents() {
     m_components.registerComponent(ComponentType::VELOCITY, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::SIZE, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::COLOR, sizeof(Color), numEntities);
-    m_components.registerComponent(ComponentType::RESOURCE, sizeof(Vector2i), numEntities);
+    m_components.registerComponent(ComponentType::RESOURCE, sizeof(Resource), numEntities);
 }
 
 void PlayState::registerSystems() {

@@ -10,7 +10,7 @@
 #include "EntityType.h"
 #include "ManaAltar.h"
 #include "System.h"
-#include "Vector2i.h"
+#include "Resource.h"
 
 class RenderManaAltar : public RenderSystem {
   public:
@@ -73,7 +73,7 @@ void RenderManaAltar::render() const {
         Vector2 &pos = positions.getFromId<Vector2>(id);
         Vector2 &size = sizes.getFromId<Vector2>(id);
         Color &color = colors.getFromId<Color>(id);
-        Vector2i &resource = resources.getFromId<Vector2i>(id);
+        Resource &resource = resources.getFromId<Resource>(id);
 
         // draw base
         src = {0.f, 0.f, textureSize, textureSize};
@@ -81,7 +81,7 @@ void RenderManaAltar::render() const {
         DrawTexturePro(manaAltarTexture, src, dst, origin, 0.f, WHITE);
 
         // draw filling
-        fillLevel = static_cast<float>(resource.x) / static_cast<float>(resource.y);
+        fillLevel = static_cast<float>(resource.current) / static_cast<float>(resource.max);
         float fillScale = startFillLevel + (maxFillLevel - startFillLevel) * fillLevel;
 
         if (fillLevel > 0.0f) {
@@ -101,7 +101,7 @@ void RenderManaAltar::render() const {
         src = {0.f, textureSize * 2.f, textureSize, textureSize};
         dst = {pos.x, pos.y, size.x, size.y};
         DrawTexturePro(manaAltarTexture, src, dst, origin, 0.f, WHITE);
-        text = std::to_string(resource.x);
+        text = std::to_string(resource.current);
         textSize = MeasureTextEx(GetFontDefault(), text.c_str(), fontSize, spacing);
         textPos = {dst.x + (size.x / 2.f - textSize.x / 2.f), dst.y + (size.y / 8.f - textSize.y / 3.f)};
         DrawTextPro(
