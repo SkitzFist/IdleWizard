@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 
-IsometricTestState::IsometricTestState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
+IsometricTestState::IsometricTestState(const GameOptions& gameOptions) : m_gameOptions(gameOptions),
                                                                          m_camera{{0.f, 0.f}, {0.f, 0.f}, 0.f, 1.f} {
 }
 
@@ -64,7 +64,7 @@ void IsometricTestState::drawIsoGrid() const {
 }
 
 // top-left, top-bot, top-right, top-bot
-void IsometricTestState::drawRectangle(const Isometric::Rectangle &rectangleData, const Color &c) const {
+void IsometricTestState::drawRectangle(const Isometric::Rectangle& rectangleData, const Color& c) const {
     DrawLineV(rectangleData.topLeft, rectangleData.topRight, c);
     DrawLineV(rectangleData.topLeft, rectangleData.botLeft, c);
     DrawLineV(rectangleData.botRight, rectangleData.botLeft, c);

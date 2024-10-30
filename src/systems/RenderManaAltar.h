@@ -9,34 +9,34 @@
 #include "Component.h"
 #include "EntityType.h"
 #include "ManaAltar.h"
-#include "System.h"
 #include "Resource.h"
+#include "System.h"
 
 class RenderManaAltar : public RenderSystem {
   public:
-    RenderManaAltar(Component &positions,
-                    Component &sizes,
-                    Component &colors,
-                    Component &resources,
-                    std::vector<int> &manaAltarIds);
+    RenderManaAltar(Component& positions,
+                    Component& sizes,
+                    Component& colors,
+                    Component& resources,
+                    std::vector<int>& manaAltarIds);
     ~RenderManaAltar();
 
     virtual void render() const override;
 
   private:
-    Component &positions;
-    Component &sizes;
-    Component &colors;
-    Component &resources;
-    std::vector<int> &manaAltarIds;
+    Component& positions;
+    Component& sizes;
+    Component& colors;
+    Component& resources;
+    std::vector<int>& manaAltarIds;
     Texture2D manaAltarTexture;
 };
 
-RenderManaAltar::RenderManaAltar(Component &positions,
-                                 Component &sizes,
-                                 Component &colors,
-                                 Component &resources,
-                                 std::vector<int> &manaAltarIds) : positions(positions),
+RenderManaAltar::RenderManaAltar(Component& positions,
+                                 Component& sizes,
+                                 Component& colors,
+                                 Component& resources,
+                                 std::vector<int>& manaAltarIds) : positions(positions),
                                                                    sizes(sizes),
                                                                    colors(colors),
                                                                    resources(resources),
@@ -70,10 +70,10 @@ void RenderManaAltar::render() const {
     // std::cout << "Size: " << manaAltarIds.size() << '\n';
 
     for (const int id : manaAltarIds) {
-        Vector2 &pos = positions.getFromId<Vector2>(id);
-        Vector2 &size = sizes.getFromId<Vector2>(id);
-        Color &color = colors.getFromId<Color>(id);
-        Resource &resource = resources.getFromId<Resource>(id);
+        Vector2& pos = positions.getFromId<Vector2>(id);
+        Vector2& size = sizes.getFromId<Vector2>(id);
+        Color& color = colors.getFromId<Color>(id);
+        Resource& resource = resources.getFromId<Resource>(id);
 
         // draw base
         src = {0.f, 0.f, textureSize, textureSize};

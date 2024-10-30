@@ -52,7 +52,7 @@ void EcsManager::removeEntity(const int entityId) {
         ComponentType type = (ComponentType)i;
         bool aHasComponent = hasComponent(aIndex, type);
         bool bHasComponent = hasComponent(bIndex, type);
-        Component &component = components[i];
+        Component& component = components[i];
 
         if (aHasComponent && bHasComponent) {
             // 2.1 swap data pop back <-- A and B has component[X]
@@ -79,7 +79,7 @@ bool EcsManager::hasComponent(const int index, const ComponentType type) const {
     return entityToComponents[index].test(type);
 }
 
-void EcsManager::addComponent(const int index, const ComponentType type, void *data) {
+void EcsManager::addComponent(const int index, const ComponentType type, void* data) {
     components[type].add(data, index);
     entityToComponents[index].set(type);
 }

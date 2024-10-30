@@ -23,4 +23,3 @@ inline const std::string toString(const EntityType type) {
     }
 }
 #endif
-    

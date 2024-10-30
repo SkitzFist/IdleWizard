@@ -17,10 +17,10 @@ class Component {
     }
 
     // Disable copy semantics to prevent accidental copying, should maybe allow this for when world splitting
-    Component(const Component &) = delete;
-    Component &operator=(const Component &) = delete;
+    Component(const Component&) = delete;
+    Component& operator=(const Component&) = delete;
 
-    Component(Component &&other) noexcept
+    Component(Component&& other) noexcept
         : m_data(other.m_data),
           m_entityIds(std::move(other.m_entityIds)),
           m_dataTypeSize(other.m_dataTypeSize),
@@ -31,7 +31,7 @@ class Component {
         other.capacity = 0;
     }
 
-    Component &operator=(Component &&other) noexcept {
+    Component& operator=(Component&& other) noexcept {
         if (this != &other) {
             delete[] m_data;
 
@@ -55,7 +55,7 @@ class Component {
     void resize(size_t newCapacity) {
         capacity = newCapacity;
 
-        std::byte *tmp = new std::byte[m_dataTypeSize * capacity];
+        std::byte* tmp = new std::byte[m_dataTypeSize * capacity];
 
         memcpy(tmp, m_data, m_dataTypeSize * m_size);
 
@@ -71,7 +71,7 @@ class Component {
         return capacity;
     }
 
-    void add(void *item, int id) {
+    void add(void* item, int id) {
         if (m_size == capacity) {
             resize(capacity * 2);
         }
@@ -82,25 +82,25 @@ class Component {
     }
 
     template <typename T>
-    T &get(size_t index) {
-        return reinterpret_cast<T &>(m_data[index * m_dataTypeSize]);
+    T& get(size_t index) {
+        return reinterpret_cast<T&>(m_data[index * m_dataTypeSize]);
     }
 
     template <typename T>
-    const T &get(size_t index) const {
-        return reinterpret_cast<const T &>(m_data[index * m_dataTypeSize]);
+    const T& get(size_t index) const {
+        return reinterpret_cast<const T&>(m_data[index * m_dataTypeSize]);
     }
 
     template <typename T>
-    T &getFromId(size_t id) {
+    T& getFromId(size_t id) {
         int index = getIndex(id);
-        return reinterpret_cast<T &>(m_data[index * m_dataTypeSize]);
+        return reinterpret_cast<T&>(m_data[index * m_dataTypeSize]);
     }
 
     template <typename T>
-    const T &getFromId(size_t id) const {
+    const T& getFromId(size_t id) const {
         int index = getIndex(id);
-        return reinterpret_cast<const T &>(m_data[index * m_dataTypeSize]);
+        return reinterpret_cast<const T&>(m_data[index * m_dataTypeSize]);
     }
 
     int getIndex(int entityID) const {
@@ -188,7 +188,7 @@ class Component {
     }
 
   private:
-    std::byte *m_data;
+    std::byte* m_data;
     std::vector<int> m_entityIds;
     size_t m_dataTypeSize;
     size_t capacity;
@@ -198,7 +198,7 @@ class Component {
     ////////////////////////////////
     ///    Moving / sorting     ///
     //////////////////////////////
-    void swapData(const int indexA, const int indexB, void *tmp) {
+    void swapData(const int indexA, const int indexB, void* tmp) {
         std::size_t memPlaceA = m_dataTypeSize * indexA;
         std::size_t memPlaceB = m_dataTypeSize * indexB;
 
@@ -210,7 +210,7 @@ class Component {
     void sortItem(const int index) {
         int newIndex = index;
 
-        void *tmp = malloc(m_dataTypeSize);
+        void* tmp = malloc(m_dataTypeSize);
 
         // move element up
         while (newIndex > 0 && m_entityIds[newIndex] < m_entityIds[newIndex - 1]) {

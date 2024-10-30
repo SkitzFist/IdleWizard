@@ -15,7 +15,7 @@ struct Rectangle {
     Vector2 topLeft, topRight, botLeft, botRight;
 };
 
-inline Vector2 toScreen(const Vector2 &pos) {
+inline Vector2 toScreen(const Vector2& pos) {
     return {
         (pos.x - pos.y) * (TILE_WIDTH / 2),
         (pos.x + pos.y) * (TILE_HEIGHT / 2)};

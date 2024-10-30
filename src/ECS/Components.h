@@ -4,10 +4,10 @@
 #include <stdexcept>
 #include <unordered_map>
 
-#include "ComponentType.h"
 #include "Component.h"
+#include "ComponentType.h"
 
-//todo: swithc unordered_map to array as there is a finite number of components.
+// todo: swithc unordered_map to array as there is a finite number of components.
 struct Components {
     std::unordered_map<ComponentType, Component> components;
 
@@ -15,7 +15,7 @@ struct Components {
         components.try_emplace(type, Component(dataTypeSize, initCapacity));
     }
 
-    Component &operator[](const ComponentType type) {
+    Component& operator[](const ComponentType type) {
         auto it = components.find(type);
         if (it != components.end()) {
             return it->second;
@@ -33,8 +33,8 @@ struct Components {
         }
     }
 
-    Component &operator[](const size_t index) {
-        auto it = components.find((ComponentType) index);
+    Component& operator[](const size_t index) {
+        auto it = components.find((ComponentType)index);
         if (it != components.end()) {
             return it->second;
         } else {
@@ -42,7 +42,7 @@ struct Components {
         }
     }
 
-    const Component &operator[](const size_t index) const {
+    const Component& operator[](const size_t index) const {
         auto it = components.find((ComponentType)index);
         if (it != components.end()) {
             return it->second;

@@ -7,7 +7,7 @@
 #include "EntityType.h"
 #include "Vector2i.h"
 
-void createManaAltar(EcsManager &ecs, int worldWidth, int worldHeight) {
+void createManaAltar(EcsManager& ecs, int worldWidth, int worldHeight) {
     int entityId = ecs.createEntity(EntityType::MANA_ALTAR);
 
     Vector2 size = {MANA_ALTAR_WIDTH, MANA_ALTAR_HEIGHT};

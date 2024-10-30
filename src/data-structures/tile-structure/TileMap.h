@@ -2,20 +2,22 @@
 #define IDLE_WIZARD_TILE_MAP_H
 
 #include <array>
-#include <vector>
 #include <unordered_set>
+#include <vector>
+
+// debug
 #include <iostream>
 
 inline constexpr const int COLUMNS = 1;
 inline constexpr const int ROWS = 1;
-struct TileMap{
+struct TileMap {
     std::array<std::vector<int>, COLUMNS * ROWS> m_map;
     std::vector<int> entities;
 
     const int tileWidth;
     const int tileHeight;
 
-    //todo need to handle entities creation
+    // todo need to handle entities creation
     TileMap(const int tileWidth, const int tileHeight, const int initEntities) : tileWidth(tileWidth), tileHeight(tileHeight), entities(initEntities) {
     }
 
@@ -25,7 +27,7 @@ struct TileMap{
         }
     }
 
-    void setEntitiesSize(size_t size){
+    void setEntitiesSize(size_t size) {
         entities.resize(size);
     }
 
@@ -37,21 +39,21 @@ struct TileMap{
         m_map[worldIndex].emplace_back(id);
     }
 
-    void entityAdd(){
-      for(int i = 0; i < entities.size(); ++i){
-       int worldIndex = entities[i];
+    void entityAdd() {
+        for (int i = 0; i < entities.size(); ++i) {
+            int worldIndex = entities[i];
 
-       //TODO REMOVE THIS WHEN DONE TESTING
-       if(worldIndex < 0 || worldIndex > (COLUMNS * ROWS)){
-        std::cerr << "WorldIndex is Wrong: " << worldIndex << "\n"; 
-        return;
-       }
+            // TODO REMOVE THIS WHEN DONE TESTING
+            if (worldIndex < 0 || worldIndex > (COLUMNS * ROWS)) {
+                std::cerr << "WorldIndex is Wrong: " << worldIndex << "\n";
+                return;
+            }
 
-       m_map[worldIndex].emplace_back(i);
-      }
+            m_map[worldIndex].emplace_back(i);
+        }
     }
 
-    void search(std::vector<int> &out,
+    void search(std::vector<int>& out,
                 const float x,
                 const float y,
                 const float width,

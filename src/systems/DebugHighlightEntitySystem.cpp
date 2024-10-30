@@ -2,7 +2,7 @@
 
 #include <string>
 
-DebugHighlightEntitySystem::DebugHighlightEntitySystem(EcsManager &ecsManager, Camera2D &camera) : m_ecs(ecsManager),
+DebugHighlightEntitySystem::DebugHighlightEntitySystem(EcsManager& ecsManager, Camera2D& camera) : m_ecs(ecsManager),
                                                                                                    m_components(ecsManager.components),
                                                                                                    m_camera(camera) {}
 
@@ -11,8 +11,8 @@ void DebugHighlightEntitySystem::update(float dt) {
     Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), m_camera);
     std::vector<int> entitiesFound;
     for (int i = 0; i < m_ecs.size; ++i) {
-        Vector2 &pos = m_components[(int)ComponentType::POSITION].getFromId<Vector2>(i);
-        Vector2 &size = m_components[(int)ComponentType::SIZE].getFromId<Vector2>(i);
+        Vector2& pos = m_components[(int)ComponentType::POSITION].getFromId<Vector2>(i);
+        Vector2& size = m_components[(int)ComponentType::SIZE].getFromId<Vector2>(i);
 
         if (mousePos.x > pos.x && mousePos.x < pos.x + size.x &&
             mousePos.y > pos.y && mousePos.y < pos.y + size.y) {

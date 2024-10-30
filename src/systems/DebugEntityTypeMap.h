@@ -8,12 +8,12 @@
 
 class DebugEntityTypeMap : public UpdateRenderSystem {
   public:
-    DebugEntityTypeMap(EcsManager &ecs);
+    DebugEntityTypeMap(EcsManager& ecs);
     virtual void update(float dt) override;
     virtual void render() const override;
 
   private:
-    EcsManager &m_ecs;
+    EcsManager& m_ecs;
     bool m_enabled;
 };
 

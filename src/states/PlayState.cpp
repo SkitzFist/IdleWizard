@@ -16,15 +16,15 @@
 #include "ManaAltar.h"
 
 // data
-#include "Vector2i.h"
 #include "Resource.h"
+#include "Vector2i.h"
 
 inline Timer t1;
 inline Timer t2;
 
 inline int numEntities = 10;
 
-PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
+PlayState::PlayState(const GameOptions& gameOptions) : m_gameOptions(gameOptions),
                                                        m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
                                                        m_ecs(),
                                                        m_components(m_ecs.components),
@@ -120,7 +120,7 @@ void PlayState::update(float dt) {
 
     if (t1.getDuration() > 500.0) {
         for (int i = 0; i < m_components[ComponentType::RESOURCE].getSize(); ++i) {
-            Vector2i &resource = m_components[ComponentType::RESOURCE].get<Vector2i>(i);
+            Vector2i& resource = m_components[ComponentType::RESOURCE].get<Vector2i>(i);
             resource.x += 1;
 
             if (resource.x > resource.y) {
@@ -134,8 +134,8 @@ void PlayState::update(float dt) {
 }
 
 void PlayState::rebuildTileMap() {
-    Component &positions = m_components[ComponentType::POSITION];
-    Component &sizes = m_components[ComponentType::SIZE];
+    Component& positions = m_components[ComponentType::POSITION];
+    Component& sizes = m_components[ComponentType::SIZE];
 
     m_tileMap.clear();
     Vector2 pos;
