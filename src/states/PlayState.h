@@ -12,10 +12,6 @@
 #include "EcsManager.h"
 #include "Systems.h"
 
-// debug
-#include "DebugEntityTypeMap.h"
-#include "DebugHighlightEntitySystem.h"
-
 class PlayState : public GameState {
   public:
     PlayState(const GameOptions& GameOptions);
@@ -33,13 +29,6 @@ class PlayState : public GameState {
     EcsManager m_ecs;
     Components& m_components;
     Systems& m_systems;
-
-    // tmp textures;
-    Texture2D m_texture;
-
-    // debug
-    DebugHighlightEntitySystem m_debugHighlight;
-    DebugEntityTypeMap m_debugEntityTypeMap;
 
   private:
     // init

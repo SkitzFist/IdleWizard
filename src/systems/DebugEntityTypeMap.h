@@ -6,9 +6,10 @@
 #include "EcsManager.h"
 #include "System.h"
 
-class DebugEntityTypeMap : public UpdateRenderSystem {
+class DebugEntityTypeMap : public UiSystem {
   public:
     DebugEntityTypeMap(EcsManager& ecs);
+    virtual ~DebugEntityTypeMap() override {}
     virtual void update(float dt) override;
     virtual void render() const override;
 

@@ -14,6 +14,7 @@
 class MoveSystem : public UpdateSystem {
   public:
     MoveSystem(Component& positions, Component& velocities, Component& sizes, TileMap& tileMap);
+    virtual ~MoveSystem() override {}
     virtual void update(const float dt) override;
 
   private:

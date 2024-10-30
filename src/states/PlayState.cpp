@@ -12,6 +12,10 @@
 #include "RenderBlobSystem.h"
 #include "RenderManaAltar.h"
 
+// UI Systems
+#include "DebugEntityTypeMap.h"
+#include "DebugHighlightEntitySystem.h"
+
 // entity factories
 #include "ManaAltar.h"
 
@@ -28,9 +32,7 @@ PlayState::PlayState(const GameOptions& gameOptions) : m_gameOptions(gameOptions
                                                        m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
                                                        m_ecs(),
                                                        m_components(m_ecs.components),
-                                                       m_systems(m_ecs.systems),
-                                                       m_debugHighlight(m_ecs, m_camera),
-                                                       m_debugEntityTypeMap(m_ecs) {
+                                                       m_systems(m_ecs.systems) {
     m_camera.offset = {0.f, 0.f};
     m_camera.target = {0.f, 0.f};
     m_camera.rotation = 0.f;
@@ -68,25 +70,30 @@ void PlayState::registerComponents() {
 
 void PlayState::registerSystems() {
     // update
-    m_systems.registerUpdateSystem<MoveSystem>(UpdateSystemType::VELOCITY_MOVE,
-                                               m_components[ComponentType::POSITION],
-                                               m_components[ComponentType::VELOCITY],
-                                               m_components[ComponentType::SIZE],
-                                               m_tileMap);
+
+    m_systems.updateSystems.add<MoveSystem>(UpdateSystemType::VELOCITY_MOVE,
+                                            m_components[ComponentType::POSITION],
+                                            m_components[ComponentType::VELOCITY],
+                                            m_components[ComponentType::SIZE],
+                                            m_tileMap);
 
     // render
-    m_systems.registerRenderSystem<RenderBlobSystem>(RenderSystemType::BLOB,
-                                                     m_ecs.entityTypeMap[EntityType::BLOB],
-                                                     m_components[ComponentType::POSITION],
-                                                     m_components[ComponentType::SIZE],
-                                                     m_ecs.entityTypeMap);
+    m_systems.renderSystems.add<RenderBlobSystem>(RenderSystemType::BLOB,
+                                                  m_ecs.entityTypeMap[EntityType::BLOB],
+                                                  m_components[ComponentType::POSITION],
+                                                  m_components[ComponentType::SIZE],
+                                                  m_ecs.entityTypeMap);
 
-    m_systems.registerRenderSystem<RenderManaAltar>(RenderSystemType::MANA_ALTAR,
-                                                    m_components[ComponentType::POSITION],
-                                                    m_components[ComponentType::SIZE],
-                                                    m_components[ComponentType::COLOR],
-                                                    m_components[ComponentType::RESOURCE],
-                                                    m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
+    m_systems.renderSystems.add<RenderManaAltar>(RenderSystemType::MANA_ALTAR,
+                                                 m_components[ComponentType::POSITION],
+                                                 m_components[ComponentType::SIZE],
+                                                 m_components[ComponentType::COLOR],
+                                                 m_components[ComponentType::RESOURCE],
+                                                 m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
+
+    // Ui Systems
+    m_systems.uiSystems.add<DebugEntityTypeMap>(UiSystemType::DEBUG_ENTITY_TYPE_MAP, m_ecs);
+    m_systems.uiSystems.add<DebugHighlightEntitySystem>(UiSystemType::DEBUG_HIGHLIGHT_ENTITY_SYSTEM, m_ecs, m_camera);
 }
 
 PlayState::~PlayState() {
@@ -107,8 +114,7 @@ void PlayState::handleInput() {
 
 void PlayState::update(float dt) {
 
-    m_debugHighlight.update(dt);
-    m_debugEntityTypeMap.update(dt);
+    m_systems.uiSystems.update(dt);
 
     if (shouldFreeze) {
         return;
@@ -130,7 +136,7 @@ void PlayState::update(float dt) {
         t1.begin();
     }
 
-    m_systems.runUpdateSystems(dt);
+    m_systems.updateSystems.update(dt);
 }
 
 void PlayState::rebuildTileMap() {
@@ -157,13 +163,13 @@ void PlayState::rebuildTileMapEntity() {
 void PlayState::render() const {
     BeginMode2D(m_camera);
 
-    m_systems.runRenderSystems();
+    m_systems.renderSystems.render();
 
     EndMode2D();
 
     drawUi();
-    m_debugHighlight.render();
-    m_debugEntityTypeMap.render();
+
+    m_systems.uiSystems.render();
 }
 
 void PlayState::drawUi() const {

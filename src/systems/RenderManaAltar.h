@@ -19,7 +19,7 @@ class RenderManaAltar : public RenderSystem {
                     Component& colors,
                     Component& resources,
                     std::vector<int>& manaAltarIds);
-    ~RenderManaAltar();
+    virtual ~RenderManaAltar() override;
 
     virtual void render() const override;
 
@@ -41,8 +41,7 @@ RenderManaAltar::RenderManaAltar(Component& positions,
                                                                    colors(colors),
                                                                    resources(resources),
                                                                    manaAltarIds(manaAltarIds) {
-    RenderTexture2D target = LoadRenderTexture(MANA_ALTAR_WIDTH, MANA_ALTAR_HEIGHT);
-    const float thickness = 1.f;
+    std::cout << "LoadingTexture\n";
     manaAltarTexture = LoadTexture("Assets/mana_altar_sh.png");
 }
 
@@ -66,8 +65,6 @@ void RenderManaAltar::render() const {
     std::string text;
     Vector2 textSize;
     Vector2 textPos;
-
-    // std::cout << "Size: " << manaAltarIds.size() << '\n';
 
     for (const int id : manaAltarIds) {
         Vector2& pos = positions.getFromId<Vector2>(id);

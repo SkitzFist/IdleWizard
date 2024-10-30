@@ -8,9 +8,10 @@
 #include "EcsManager.h"
 #include "System.h"
 
-class DebugHighlightEntitySystem : UpdateRenderSystem {
+class DebugHighlightEntitySystem : public UiSystem {
   public:
     DebugHighlightEntitySystem(EcsManager& EcsManager, Camera2D& camera);
+    virtual ~DebugHighlightEntitySystem() override {}
 
     virtual void update(float dt) override;
     virtual void render() const override;

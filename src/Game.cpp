@@ -12,14 +12,13 @@
 inline constexpr const Game::State initState = Game::State::PLAY_STATE;
 
 Game::Game(const GameOptions& gameOptions) : m_gameOptions(gameOptions) {
-    SetTraceLogLevel(LOG_NONE);
+    // SetTraceLogLevel(LOG_NONE);
     InitWindow(m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT, "Idle Wizard");
 
     switchState(initState);
 }
 
 Game::~Game() {
-    CloseWindow();
 }
 
 void Game::switchState(State state) {
