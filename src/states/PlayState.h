@@ -6,7 +6,7 @@
 #include "GameOptions.h"
 #include "GameState.h"
 
-#include "TileMap.h"
+#include "Worlds.h"
 
 #include "Components.h"
 #include "EcsManager.h"
@@ -24,11 +24,11 @@ class PlayState : public GameState {
     const GameOptions& m_gameOptions;
     Camera2D m_camera;
 
-    TileMap m_tileMap;
-
     EcsManager m_ecs;
     Components& m_components;
     Systems& m_systems;
+
+    Worlds m_worlds;
 
   private:
     // init

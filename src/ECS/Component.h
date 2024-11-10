@@ -103,6 +103,11 @@ class Component {
         return reinterpret_cast<const T&>(m_data[index * m_dataTypeSize]);
     }
 
+    void* getDataPointer(size_t id) {
+        int index = getIndex(id);
+        return &m_data[index * m_dataTypeSize];
+    }
+
     int getIndex(int entityID) const {
         int low = 0;
         int high = m_entityIds.size() - 1;

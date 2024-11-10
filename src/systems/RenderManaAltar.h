@@ -41,7 +41,6 @@ RenderManaAltar::RenderManaAltar(Component& positions,
                                                                    colors(colors),
                                                                    resources(resources),
                                                                    manaAltarIds(manaAltarIds) {
-    std::cout << "LoadingTexture\n";
     manaAltarTexture = LoadTexture("Assets/mana_altar_sh.png");
 }
 

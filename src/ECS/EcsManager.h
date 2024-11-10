@@ -18,6 +18,8 @@ class EcsManager {
     int createEntity(const EntityType type);
     void removeEntity(const int entityId);
 
+    int copyEntity(const int entityId);
+
     // components
     bool hasComponent(const int index, const ComponentType type) const;
     void addComponent(const int index, const ComponentType type, void* data);

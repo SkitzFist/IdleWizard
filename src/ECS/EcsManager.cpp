@@ -75,6 +75,27 @@ void EcsManager::removeEntity(const int entityId) {
     --size;
 }
 
+int EcsManager::copyEntity(const int entityId) {
+    ComponentSignature componentSig = entityToComponents[entityId];
+
+    int newId = createEntity(entityTypes[entityId]);
+
+    for (size_t i = componentSig._Find_first(); i < componentSig.size(); i = componentSig._Find_next(i)) {
+        ComponentType type = (ComponentType)i;
+        Component& component = components[i];
+
+        // for future references, this is not thread safe as the data pointers get invalidated
+        if (component.getSize() == component.getCapacity()) {
+            component.resize(component.getCapacity() * 2);
+        }
+
+        void* data = component.getDataPointer(entityId);
+
+        addComponent(newId, type, data);
+    }
+    return newId;
+}
+
 bool EcsManager::hasComponent(const int index, const ComponentType type) const {
     return entityToComponents[index].test(type);
 }

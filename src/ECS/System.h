@@ -7,8 +7,8 @@
 */
 
 enum class UpdateSystemType {
+    WORLD_TO_REAL_POS,
     VELOCITY_MOVE,
-    WORLD_TRANSITION,
     COUNT
 };
 

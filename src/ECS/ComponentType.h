@@ -8,6 +8,8 @@
 
 enum ComponentType {
     POSITION,
+    WORLD_POSITION,
+    WORLD_INDEX,
     SIZE,
     VELOCITY,
     COLOR,
@@ -21,6 +23,10 @@ inline std::string toString(const ComponentType type) {
     switch (type) {
     case ComponentType::POSITION:
         return "Position";
+    case ComponentType::WORLD_POSITION:
+        return "World Position";
+    case ComponentType::WORLD_INDEX:
+        return "World Index";
     case ComponentType::SIZE:
         return "Size";
     case ComponentType::VELOCITY:

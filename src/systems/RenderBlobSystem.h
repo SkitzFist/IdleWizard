@@ -31,7 +31,6 @@ RenderBlobSystem::RenderBlobSystem(std::vector<int>& blobIds,
                                                              m_positions(positions),
                                                              m_sizes(sizes),
                                                              m_typeMap(typeMap) {
-    const float size = 10.f;
     m_blobTexture = LoadTexture("Assets/wizard.png");
 }
 
@@ -48,8 +47,8 @@ void RenderBlobSystem::render() const {
         const Vector2& size = m_sizes.getFromId<Vector2>(id);
         dst.x = pos.x;
         dst.y = pos.y;
-        dst.width = 32.f * 3.f;
-        dst.height = 32.f * 3.f;
+        dst.width = size.x;
+        dst.height = size.y;
         DrawTexturePro(m_blobTexture, src, dst, origin, 0.f, WHITE);
     }
 }
