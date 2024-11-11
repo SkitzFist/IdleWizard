@@ -29,6 +29,10 @@ inline Timer t2;
 
 inline int numEntities = 1000;
 
+/*
+    Todo Blood mana -> comes from sacrificing minions
+*/
+
 PlayState::PlayState(const GameOptions& gameOptions) : m_gameOptions(gameOptions),
                                                        m_ecs(),
                                                        m_components(m_ecs.components),
@@ -43,7 +47,7 @@ PlayState::PlayState(const GameOptions& gameOptions) : m_gameOptions(gameOptions
     registerSystems();
 
     for (int i = 0; i < numEntities; ++i) {
-        if (i % 2 == 0) {
+        if (i < 2) {
             createManaAltar(m_ecs, m_worlds);
         } else {
             int entityId = m_ecs.createEntity(EntityType::BLOB);
@@ -107,7 +111,7 @@ void PlayState::registerSystems() {
 
     // Ui Systems
     m_systems.uiSystems.add<DebugEntityTypeMap>(UiSystemType::DEBUG_ENTITY_TYPE_MAP, m_ecs);
-    m_systems.uiSystems.add<DebugHighlightEntitySystem>(UiSystemType::DEBUG_HIGHLIGHT_ENTITY_SYSTEM, m_ecs, m_camera);
+    m_systems.uiSystems.add<DebugHighlightEntitySystem>(UiSystemType::DEBUG_HIGHLIGHT_ENTITY_COMPONENTS, m_ecs, m_camera);
 }
 
 PlayState::~PlayState() {
@@ -132,11 +136,17 @@ void PlayState::handleInput() {
     if (IsKeyPressed(KEY_D)) {
         grow(m_worlds, m_ecs);
     }
+
+    // todo add pre-frame & post-frame methods to state
+    ++m_systems.frameCounter;
+    if (m_systems.frameCounter == m_systems.framesBeforeLog) {
+        m_systems.printMeasures();
+    }
 }
 
 void PlayState::update(float dt) {
 
-    m_systems.uiSystems.update(dt);
+    m_systems.updateUiSystems(dt);
 
     if (shouldFreeze) {
         return;
@@ -154,7 +164,7 @@ void PlayState::update(float dt) {
         t1.begin();
     }
 
-    m_systems.updateSystems.update(dt);
+    m_systems.runUpdateSystems(dt);
 
     transition(m_worlds);
 }
@@ -169,13 +179,13 @@ void PlayState::render() const {
         DrawRectangleLinesEx(worldRect, 2.f, BLUE);
     }
 
-    m_systems.renderSystems.render();
+    m_systems.runRenderSystems();
 
     EndMode2D();
 
     drawUi();
 
-    m_systems.uiSystems.render();
+    m_systems.renderUiSystems();
 }
 
 void PlayState::drawUi() const {
