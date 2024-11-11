@@ -2,13 +2,12 @@
 #define IDLE_WIZARD_SYSTEM_H
 
 /*
-  Todo: Unite, have one system that has a handleInput, update(float) and render() const method.
-        Have just one enum class for all systems, but three bitsets that checks if a system should
-        handle input, update and/or render.
+  Todo: break out in separate classes
   Note: Order in the enum is important, as it is the order the system will be executed in.
 */
 
 enum class UpdateSystemType {
+    WORLD_TO_REAL_POS,
     VELOCITY_MOVE,
     COUNT
 };
@@ -19,22 +18,29 @@ enum class RenderSystemType {
     COUNT
 };
 
-class System {
-  public:
-    virtual ~System() = default;
+enum class UiSystemType {
+    DEBUG_ENTITY_TYPE_MAP,
+    DEBUG_HIGHLIGHT_ENTITY_SYSTEM,
+    COUNT
 };
 
-class UpdateSystem : public System {
+class UpdateSystem {
   public:
+    virtual ~UpdateSystem() = default;
     virtual void update(const float dt) = 0;
 };
 
-class RenderSystem : public System {
+class RenderSystem {
   public:
+    virtual ~RenderSystem() = default;
     virtual void render() const = 0;
 };
 
-class UpdateRenderSystem : public UpdateSystem, public RenderSystem {
+class UiSystem {
+  public:
+    virtual void update(const float dt) = 0;
+    virtual void render() const = 0;
+    virtual ~UiSystem() = default;
 };
 
 #endif

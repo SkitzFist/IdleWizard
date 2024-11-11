@@ -52,7 +52,7 @@ void EcsManager::removeEntity(const int entityId) {
         ComponentType type = (ComponentType)i;
         bool aHasComponent = hasComponent(aIndex, type);
         bool bHasComponent = hasComponent(bIndex, type);
-        Component &component = components[i];
+        Component& component = components[i];
 
         if (aHasComponent && bHasComponent) {
             // 2.1 swap data pop back <-- A and B has component[X]
@@ -75,11 +75,32 @@ void EcsManager::removeEntity(const int entityId) {
     --size;
 }
 
+int EcsManager::copyEntity(const int entityId) {
+    ComponentSignature componentSig = entityToComponents[entityId];
+
+    int newId = createEntity(entityTypes[entityId]);
+
+    for (size_t i = componentSig._Find_first(); i < componentSig.size(); i = componentSig._Find_next(i)) {
+        ComponentType type = (ComponentType)i;
+        Component& component = components[i];
+
+        // for future references, this is not thread safe as the data pointers get invalidated
+        if (component.getSize() == component.getCapacity()) {
+            component.resize(component.getCapacity() * 2);
+        }
+
+        void* data = component.getDataPointer(entityId);
+
+        addComponent(newId, type, data);
+    }
+    return newId;
+}
+
 bool EcsManager::hasComponent(const int index, const ComponentType type) const {
     return entityToComponents[index].test(type);
 }
 
-void EcsManager::addComponent(const int index, const ComponentType type, void *data) {
+void EcsManager::addComponent(const int index, const ComponentType type, void* data) {
     components[type].add(data, index);
     entityToComponents[index].set(type);
 }

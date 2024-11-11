@@ -7,15 +7,19 @@
 #include "EntityType.h"
 #include "Vector2i.h"
 
-void createManaAltar(EcsManager &ecs, int worldWidth, int worldHeight) {
+void createManaAltar(EcsManager& ecs, Worlds& worlds) {
     int entityId = ecs.createEntity(EntityType::MANA_ALTAR);
 
     Vector2 size = {MANA_ALTAR_WIDTH, MANA_ALTAR_HEIGHT};
     ecs.addComponent(entityId, ComponentType::SIZE, &size);
 
-    Vector2 pos = {
-        (float)GetRandomValue(0, worldWidth - MANA_ALTAR_WIDTH),
-        (float)GetRandomValue(0, worldHeight - MANA_ALTAR_HEIGHT)};
+    Vector2 worldPos = {GetRandomValue(10, 90) / 100.f, GetRandomValue(10, 90) / 100.f};
+    ecs.addComponent(entityId, ComponentType::WORLD_POSITION, &worldPos);
+
+    int worldIndex = 0;
+    ecs.addComponent(entityId, ComponentType::WORLD_INDEX, &worldIndex);
+
+    Vector2 pos = {0.f, 0.f};
     ecs.addComponent(entityId, ComponentType::POSITION, &pos);
 
     Color color = {

@@ -6,40 +6,29 @@
 #include "GameOptions.h"
 #include "GameState.h"
 
-#include "TileMap.h"
+#include "Worlds.h"
 
 #include "Components.h"
 #include "EcsManager.h"
 #include "Systems.h"
 
-// debug
-#include "DebugEntityTypeMap.h"
-#include "DebugHighlightEntitySystem.h"
-
 class PlayState : public GameState {
   public:
-    PlayState(const GameOptions &GameOptions);
+    PlayState(const GameOptions& GameOptions);
     virtual ~PlayState() override;
     virtual void handleInput() override;
     virtual void update(float dt) override;
     virtual void render() const override;
 
   private:
-    const GameOptions &m_gameOptions;
+    const GameOptions& m_gameOptions;
     Camera2D m_camera;
 
-    TileMap m_tileMap;
-
     EcsManager m_ecs;
-    Components &m_components;
-    Systems &m_systems;
+    Components& m_components;
+    Systems& m_systems;
 
-    // tmp textures;
-    Texture2D m_texture;
-
-    // debug
-    DebugHighlightEntitySystem m_debugHighlight;
-    DebugEntityTypeMap m_debugEntityTypeMap;
+    Worlds m_worlds;
 
   private:
     // init

@@ -7,30 +7,33 @@
 
 // update systems
 #include "MoveSystem.h"
+#include "WorldToRealPosSystem.h"
 
 // render systems
 #include "RenderBlobSystem.h"
 #include "RenderManaAltar.h"
 
+// UI Systems
+#include "DebugEntityTypeMap.h"
+#include "DebugHighlightEntitySystem.h"
+
 // entity factories
 #include "ManaAltar.h"
 
 // data
-#include "Vector2i.h"
 #include "Resource.h"
+#include "Vector2i.h"
 
 inline Timer t1;
 inline Timer t2;
 
-inline int numEntities = 10;
+inline int numEntities = 1000;
 
-PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions),
-                                                       m_tileMap(gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT, numEntities),
+PlayState::PlayState(const GameOptions& gameOptions) : m_gameOptions(gameOptions),
                                                        m_ecs(),
                                                        m_components(m_ecs.components),
                                                        m_systems(m_ecs.systems),
-                                                       m_debugHighlight(m_ecs, m_camera),
-                                                       m_debugEntityTypeMap(m_ecs) {
+                                                       m_worlds(createWorlds(1, 1, gameOptions.SCREEN_WIDTH, gameOptions.SCREEN_HEIGHT)) {
     m_camera.offset = {0.f, 0.f};
     m_camera.target = {0.f, 0.f};
     m_camera.rotation = 0.f;
@@ -41,18 +44,23 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
 
     for (int i = 0; i < numEntities; ++i) {
         if (i % 2 == 0) {
-            createManaAltar(m_ecs, m_gameOptions.SCREEN_WIDTH, m_gameOptions.SCREEN_HEIGHT);
+            createManaAltar(m_ecs, m_worlds);
         } else {
-            m_ecs.createEntity(EntityType::BLOB);
-            float randX = (float)GetRandomValue(0, (gameOptions.SCREEN_WIDTH * COLUMNS) - 10.f);
-            float randY = (float)GetRandomValue(0, (gameOptions.SCREEN_HEIGHT * ROWS) - 10.f);
-            Vector2 pos = {randX, randY};
+            int entityId = m_ecs.createEntity(EntityType::BLOB);
+
+            Vector2 worldPos = {GetRandomValue(10, 90) / 100.f, GetRandomValue(10, 90) / 100.f};
+            m_ecs.addComponent(i, ComponentType::WORLD_POSITION, &worldPos);
+
+            int worldIndex = 0;
+            m_ecs.addComponent(i, ComponentType::WORLD_INDEX, &worldIndex);
+
+            Vector2 pos = {0.f, 0.f};
             m_ecs.addComponent(i, ComponentType::POSITION, &pos);
 
             Vector2 vel = {100.f, 0.f};
-            m_ecs.addComponent(i, ComponentType::VELOCITY, &vel);
+            // m_ecs.addComponent(i, ComponentType::VELOCITY, &vel);
 
-            Vector2 s = {10.f, 10.f};
+            Vector2 s = {32.f * 3.f, 32.f * 3.f};
             m_ecs.addComponent(i, ComponentType::SIZE, &s);
         }
     }
@@ -60,6 +68,8 @@ PlayState::PlayState(const GameOptions &gameOptions) : m_gameOptions(gameOptions
 
 void PlayState::registerComponents() {
     m_components.registerComponent(ComponentType::POSITION, sizeof(Vector2), numEntities);
+    m_components.registerComponent(ComponentType::WORLD_POSITION, sizeof(Vector2), numEntities);
+    m_components.registerComponent(ComponentType::WORLD_INDEX, sizeof(int), numEntities);
     m_components.registerComponent(ComponentType::VELOCITY, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::SIZE, sizeof(Vector2), numEntities);
     m_components.registerComponent(ComponentType::COLOR, sizeof(Color), numEntities);
@@ -68,25 +78,36 @@ void PlayState::registerComponents() {
 
 void PlayState::registerSystems() {
     // update
-    m_systems.registerUpdateSystem<MoveSystem>(UpdateSystemType::VELOCITY_MOVE,
-                                               m_components[ComponentType::POSITION],
-                                               m_components[ComponentType::VELOCITY],
-                                               m_components[ComponentType::SIZE],
-                                               m_tileMap);
+
+    m_systems.updateSystems.add<WorldToRealPosSystem>(UpdateSystemType::WORLD_TO_REAL_POS,
+                                                      m_worlds,
+                                                      m_components[ComponentType::POSITION],
+                                                      m_components[ComponentType::WORLD_POSITION],
+                                                      m_components[ComponentType::WORLD_INDEX],
+                                                      m_components[ComponentType::SIZE]);
+
+    m_systems.updateSystems.add<MoveSystem>(UpdateSystemType::VELOCITY_MOVE,
+                                            m_components[ComponentType::POSITION],
+                                            m_components[ComponentType::VELOCITY],
+                                            m_components[ComponentType::SIZE]);
 
     // render
-    m_systems.registerRenderSystem<RenderBlobSystem>(RenderSystemType::BLOB,
-                                                     m_ecs.entityTypeMap[EntityType::BLOB],
-                                                     m_components[ComponentType::POSITION],
-                                                     m_components[ComponentType::SIZE],
-                                                     m_ecs.entityTypeMap);
+    m_systems.renderSystems.add<RenderBlobSystem>(RenderSystemType::BLOB,
+                                                  m_ecs.entityTypeMap[EntityType::BLOB],
+                                                  m_components[ComponentType::POSITION],
+                                                  m_components[ComponentType::SIZE],
+                                                  m_ecs.entityTypeMap);
 
-    m_systems.registerRenderSystem<RenderManaAltar>(RenderSystemType::MANA_ALTAR,
-                                                    m_components[ComponentType::POSITION],
-                                                    m_components[ComponentType::SIZE],
-                                                    m_components[ComponentType::COLOR],
-                                                    m_components[ComponentType::RESOURCE],
-                                                    m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
+    m_systems.renderSystems.add<RenderManaAltar>(RenderSystemType::MANA_ALTAR,
+                                                 m_components[ComponentType::POSITION],
+                                                 m_components[ComponentType::SIZE],
+                                                 m_components[ComponentType::COLOR],
+                                                 m_components[ComponentType::RESOURCE],
+                                                 m_ecs.entityTypeMap[EntityType::MANA_ALTAR]);
+
+    // Ui Systems
+    m_systems.uiSystems.add<DebugEntityTypeMap>(UiSystemType::DEBUG_ENTITY_TYPE_MAP, m_ecs);
+    m_systems.uiSystems.add<DebugHighlightEntitySystem>(UiSystemType::DEBUG_HIGHLIGHT_ENTITY_SYSTEM, m_ecs, m_camera);
 }
 
 PlayState::~PlayState() {
@@ -103,24 +124,27 @@ void PlayState::handleInput() {
     if (IsKeyPressed(KEY_LEFT_CONTROL)) {
         shouldFreeze = !shouldFreeze;
     }
+
+    if (IsKeyPressed(KEY_S)) {
+        split(m_worlds, m_ecs);
+    }
+
+    if (IsKeyPressed(KEY_D)) {
+        grow(m_worlds, m_ecs);
+    }
 }
 
 void PlayState::update(float dt) {
 
-    m_debugHighlight.update(dt);
-    m_debugEntityTypeMap.update(dt);
+    m_systems.uiSystems.update(dt);
 
     if (shouldFreeze) {
         return;
     }
 
-    if (m_tileMap.entities.size() != m_ecs.size) {
-        m_tileMap.setEntitiesSize(numEntities);
-    }
-
     if (t1.getDuration() > 500.0) {
         for (int i = 0; i < m_components[ComponentType::RESOURCE].getSize(); ++i) {
-            Vector2i &resource = m_components[ComponentType::RESOURCE].get<Vector2i>(i);
+            Vector2i& resource = m_components[ComponentType::RESOURCE].get<Vector2i>(i);
             resource.x += 1;
 
             if (resource.x > resource.y) {
@@ -130,40 +154,28 @@ void PlayState::update(float dt) {
         t1.begin();
     }
 
-    m_systems.runUpdateSystems(dt);
-}
+    m_systems.updateSystems.update(dt);
 
-void PlayState::rebuildTileMap() {
-    Component &positions = m_components[ComponentType::POSITION];
-    Component &sizes = m_components[ComponentType::SIZE];
-
-    m_tileMap.clear();
-    Vector2 pos;
-    Vector2 size;
-    for (int i = 0; i < m_ecs.size; ++i) {
-        pos = positions.get<Vector2>(i);
-        size = sizes.get<Vector2>(i);
-        m_tileMap.add(i,
-                      pos.x, pos.y,
-                      size.x, size.y);
-    }
-}
-
-void PlayState::rebuildTileMapEntity() {
-    m_tileMap.clear();
-    m_tileMap.entityAdd();
+    transition(m_worlds);
 }
 
 void PlayState::render() const {
     BeginMode2D(m_camera);
 
-    m_systems.runRenderSystems();
+    Rectangle worldRect = {0.f, 0.f, m_worlds.width, m_worlds.height};
+    for (size_t i = 0; i < m_worlds.positions.size(); ++i) {
+        worldRect.x = m_worlds.positions[i].x;
+        worldRect.y = m_worlds.positions[i].y;
+        DrawRectangleLinesEx(worldRect, 2.f, BLUE);
+    }
+
+    m_systems.renderSystems.render();
 
     EndMode2D();
 
     drawUi();
-    m_debugHighlight.render();
-    m_debugEntityTypeMap.render();
+
+    m_systems.uiSystems.render();
 }
 
 void PlayState::drawUi() const {
@@ -173,6 +185,5 @@ void PlayState::drawUi() const {
     float y = 30.f;
     int fontSize = 20;
 
-    std::string fpsText = "Fps: " + std::to_string(GetFPS());
-    DrawText(fpsText.c_str(), x, y, fontSize, RAYWHITE);
+    DrawText(std::to_string(GetFPS()).c_str(), x, y, fontSize, RAYWHITE);
 }

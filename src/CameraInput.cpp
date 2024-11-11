@@ -11,12 +11,12 @@ CameraInput::CameraInput() : m_speed(1000),
                              m_minZoom(0.005f) {
 }
 
-void CameraInput::handleInput(Camera2D &camera) {
+void CameraInput::handleInput(Camera2D& camera) {
     handleZoom(camera);
     handleMovement(camera);
 }
 
-void CameraInput::handleZoom(Camera2D &camera) {
+void CameraInput::handleZoom(Camera2D& camera) {
     float mouseWheel = GetMouseWheelMove();
     if (mouseWheel == 0) {
         return;
@@ -38,7 +38,7 @@ void CameraInput::handleZoom(Camera2D &camera) {
     camera.target.y += (prevMouseWorldPos.y - newMouseWorldPos.y);
 }
 
-void CameraInput::moveTowardsMouse(Camera2D &camera) {
+void CameraInput::moveTowardsMouse(Camera2D& camera) {
     Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
 
     // Calculate the screen's center in world coordinates
@@ -49,7 +49,7 @@ void CameraInput::moveTowardsMouse(Camera2D &camera) {
     camera.target.y = mouseWorldPos.y - (screenCenterWorld.y - camera.target.y);
 }
 
-void CameraInput::handleMovement(Camera2D &camera) {
+void CameraInput::handleMovement(Camera2D& camera) {
     int movementSpeed = (int)((m_speed * GetFrameTime()) / camera.zoom);
     MathHack::clamp(movementSpeed, m_minSpeed, m_maxSpeed);
 

@@ -3,7 +3,7 @@
 
 namespace MathHack {
 template <class T>
-inline constexpr const T &clamp(T &x, const T &min, const T &max) {
+inline constexpr const T& clamp(T& x, const T& min, const T& max) {
     if (min > max) {
         return clamp(x, max, min);
     }
@@ -12,8 +12,13 @@ inline constexpr const T &clamp(T &x, const T &min, const T &max) {
 }
 
 template <class T>
-inline constexpr const T& min(const T &a, const T &b) {
+inline constexpr const T& min(const T& a, const T& b) {
     return a > b ? b : a;
+}
+
+template <class T>
+inline constexpr const T& max(const T& a, const T& b) {
+    return a < b ? a : b;
 }
 
 inline float Q_rsqrt(float number) {
@@ -23,9 +28,9 @@ inline float Q_rsqrt(float number) {
 
     x2 = number * 0.5F;
     y = number;
-    i = *(long *)&y;
+    i = *(long*)&y;
     i = 0x5f3759df - (i >> 1);
-    y = *(float *)&i;
+    y = *(float*)&i;
     y = y * (threehalfs - (x2 * y * y));
 
     return y;

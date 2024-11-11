@@ -6,14 +6,15 @@
 #include "EcsManager.h"
 #include "System.h"
 
-class DebugEntityTypeMap : public UpdateRenderSystem {
+class DebugEntityTypeMap : public UiSystem {
   public:
-    DebugEntityTypeMap(EcsManager &ecs);
+    DebugEntityTypeMap(EcsManager& ecs);
+    virtual ~DebugEntityTypeMap() override {}
     virtual void update(float dt) override;
     virtual void render() const override;
 
   private:
-    EcsManager &m_ecs;
+    EcsManager& m_ecs;
     bool m_enabled;
 };
 

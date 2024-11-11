@@ -7,66 +7,52 @@
 
 #include "System.h"
 
+template <class System, typename SystemTypeEnum, std::size_t size>
+struct SystemController {
+    std::array<std::unique_ptr<System>, size> systems;
+    std::bitset<size> onOffBits;
+
+    ~SystemController() = default;
+
+    template <typename T, typename... Args>
+    void add(SystemTypeEnum type, Args&&... args) {
+        systems[(int)type] = std::make_unique<T>(std::forward<Args>(args)...);
+        enableSystem(type);
+    }
+
+    void enableSystem(SystemTypeEnum type) {
+        onOffBits.set((int)type);
+    }
+
+    void disableSystem(SystemTypeEnum type) {
+        onOffBits.reset((int)type);
+    }
+
+    void disableAll() {
+        onOffBits.reset();
+    }
+
+    void update(float dt) {
+        for (size_t i = 0; i < systems.size(); ++i) {
+            if (onOffBits.test(i) && systems[i]) {
+                systems[i]->update(dt);
+            }
+        }
+    }
+
+    void render() {
+        for (size_t i = 0; i < systems.size(); ++i) {
+            if (onOffBits.test(i) && systems[i]) {
+                systems[i]->render();
+            }
+        }
+    }
+};
+
 struct Systems {
-    std::array<std::unique_ptr<UpdateSystem>, (int)UpdateSystemType::COUNT> updateSystems;
-    std::array<std::unique_ptr<RenderSystem>, (int)RenderSystemType::COUNT> renderSystems;
-
-    std::bitset<(int)UpdateSystemType::COUNT> updateSystemBits;
-    std::bitset<(int)RenderSystemType::COUNT> renderSystemBits;
-
-    template <typename T, typename... Args>
-    void registerUpdateSystem(UpdateSystemType type, Args &&...args) {
-        static_assert(std::is_base_of<UpdateSystem, T>::value, "T must derive from UpdateSystem");
-        updateSystems[(int)type] = std::make_unique<T>(std::forward<Args>(args)...);
-        enableUpdateSystem(type);
-    }
-
-    template <typename T, typename... Args>
-    void registerRenderSystem(RenderSystemType type, Args &&...args) {
-        static_assert(std::is_base_of<RenderSystem, T>::value, "T must derive from RenderSystem");
-        renderSystems[(int)type] = std::make_unique<T>(std::forward<Args>(args)...);
-        enableRenderSystem(type);
-    }
-
-    void enableUpdateSystem(UpdateSystemType type) {
-        updateSystemBits.set((int)type);
-    }
-
-    void enableRenderSystem(RenderSystemType type) {
-        renderSystemBits.set((int)type);
-    }
-
-    void disableUpdateSystem(UpdateSystemType type) {
-        updateSystemBits.reset((int)type);
-    }
-
-    void disableRenderSystem(RenderSystemType type) {
-        renderSystemBits.reset((int)type);
-    }
-
-    void disableAllUpdateSystems() {
-        updateSystemBits.reset();
-    }
-
-    void disableAllRenderSystems() {
-        renderSystemBits.reset();
-    }
-
-    void runUpdateSystems(const float dt) {
-        for (size_t i = 0; i < updateSystems.size(); ++i) {
-            if (updateSystemBits.test(i) && updateSystems[i]) {
-                updateSystems[i]->update(dt);
-            }
-        }
-    }
-
-    void runRenderSystems() {
-        for (size_t i = 0; i < renderSystems.size(); ++i) {
-            if (renderSystemBits.test(i) && renderSystems[i]) {
-                renderSystems[i]->render();
-            }
-        }
-    }
+    SystemController<UpdateSystem, UpdateSystemType, (size_t)UpdateSystemType::COUNT> updateSystems;
+    SystemController<RenderSystem, RenderSystemType, (size_t)RenderSystemType::COUNT> renderSystems;
+    SystemController<UiSystem, UiSystemType, (size_t)UiSystemType::COUNT> uiSystems;
 };
 
 #endif

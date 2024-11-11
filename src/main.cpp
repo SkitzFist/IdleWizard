@@ -14,7 +14,7 @@ constexpr const int SCREEN_HEIGHT = 1080;
 
 #if defined(PLATFORM_WEB)
 
-Game &getGameInstance() {
+Game& getGameInstance() {
     static Game game({SCREEN_WIDTH, SCREEN_HEIGHT});
     return game;
 }
@@ -32,26 +32,24 @@ void webLoop() {
 
 #endif
 
-int main(int argc, char* argv[]) {  
-    
+int main(int argc, char* argv[]) {
+
     std::string testArg = argc > 1 ? argv[1] : "";
-    if(testArg == "test"){
+    if (testArg == "test") {
         std::cout << "Running tests\n";
         if (!ComponentTest()) {
             return -1;
         }
 
-        if(!ecsTests()){
+        if (!ecsTests()) {
             return -1;
         }
         std::cout << "All tests successfull\n";
-        
-        if(argc > 2){
+
+        if (argc > 2) {
             return 0;
         }
     }
-
-    
 
 #if defined(PLATFORM_WEB)
     emscripten_set_main_loop(webLoop, 0, 1);

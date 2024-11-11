@@ -3,7 +3,7 @@
 #include <cstring>
 
 void EntityTypeMap::add(const EntityType type, const int id) {
-    std::vector<int> &vec = typeMap[(int)type];
+    std::vector<int>& vec = typeMap[(int)type];
     vec.emplace_back(id);
 
     if (vec.size() > 1) {
@@ -12,7 +12,7 @@ void EntityTypeMap::add(const EntityType type, const int id) {
 }
 
 void EntityTypeMap::remove(const EntityType type, const int id) {
-    std::vector<int> &vec = typeMap[(int)type];
+    std::vector<int>& vec = typeMap[(int)type];
 
     if (vec.size() == 1) {
         vec.clear();
@@ -25,7 +25,7 @@ void EntityTypeMap::remove(const EntityType type, const int id) {
 }
 
 void EntityTypeMap::switchId(const EntityType type, const int from, const int to) {
-    std::vector<int> &vec = typeMap[(int)type];
+    std::vector<int>& vec = typeMap[(int)type];
     int index = getIndex(vec, from);
     vec[index] = to;
 
@@ -34,7 +34,7 @@ void EntityTypeMap::switchId(const EntityType type, const int from, const int to
     }
 }
 
-int EntityTypeMap::getIndex(std::vector<int> &vec, int entityId) {
+int EntityTypeMap::getIndex(std::vector<int>& vec, int entityId) {
     int low = 0;
     int high = vec.size() - 1;
     int mid = 0;
@@ -55,7 +55,7 @@ int EntityTypeMap::getIndex(std::vector<int> &vec, int entityId) {
     return -1;
 }
 
-void EntityTypeMap::sortItem(std::vector<int> &vec, int index) {
+void EntityTypeMap::sortItem(std::vector<int>& vec, int index) {
     int newIndex = index;
 
     // move element up

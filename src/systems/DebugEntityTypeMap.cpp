@@ -2,7 +2,7 @@
 
 #include <string>
 
-DebugEntityTypeMap::DebugEntityTypeMap(EcsManager &ecs) : m_ecs(ecs), m_enabled(true) {
+DebugEntityTypeMap::DebugEntityTypeMap(EcsManager& ecs) : m_ecs(ecs), m_enabled(false) {
 }
 
 void DebugEntityTypeMap::update(float dt) {
@@ -50,7 +50,7 @@ void DebugEntityTypeMap::render() const {
             continue;
         }
 
-        std::vector<int> &entities = m_ecs.entityTypeMap[type];
+        std::vector<int>& entities = m_ecs.entityTypeMap[type];
         if (entities.empty())
             continue;
         std::string typeString = toString(type);
