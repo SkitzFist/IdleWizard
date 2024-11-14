@@ -49,6 +49,7 @@ inline const std::string toString(RenderSystemType type) {
 enum class UiSystemType {
     DEBUG_ENTITY_TYPE_MAP,
     DEBUG_HIGHLIGHT_ENTITY_COMPONENTS,
+    SYSTEM_MONITOR_UI,
     COUNT
 };
 
@@ -58,6 +59,9 @@ inline const std::string toString(UiSystemType type) {
         return "Debug Entity Type Map";
     case UiSystemType::DEBUG_HIGHLIGHT_ENTITY_COMPONENTS:
         return "Debug Highlight Entity Components";
+
+    case UiSystemType::SYSTEM_MONITOR_UI:
+        return "System Monitor UI";
 
     default:
         return "Ui System Default";

@@ -16,6 +16,7 @@
 // UI Systems
 #include "DebugEntityTypeMap.h"
 #include "DebugHighlightEntitySystem.h"
+#include "SystemMonitorUi.h"
 
 // entity factories
 #include "ManaAltar.h"
@@ -112,6 +113,7 @@ void PlayState::registerSystems() {
     // Ui Systems
     m_systems.uiSystems.add<DebugEntityTypeMap>(UiSystemType::DEBUG_ENTITY_TYPE_MAP, m_ecs);
     m_systems.uiSystems.add<DebugHighlightEntitySystem>(UiSystemType::DEBUG_HIGHLIGHT_ENTITY_COMPONENTS, m_ecs, m_camera);
+    m_systems.uiSystems.add<SystemMonitorUi>(UiSystemType::SYSTEM_MONITOR_UI, m_gameOptions, m_systems);
 }
 
 PlayState::~PlayState() {
